@@ -1,0 +1,20 @@
+{
+  "repository": "https://github.com/NVIDIA/OpenShell",
+  "version": "v0.1.6",
+  "commit": "ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47",
+  "published": "2026-10-27T17:56:58Z",
+  "checked": "2026-10-29",
+  "schema": 2,
+  "workload_base": "ubuntu:24.04@sha256:fe81560990fae86dc4743202b2cb4d3df98d0bcf949173cecef15ce1127ef852",
+  "images": {
+    "gateway": "ghcr.io/nvidia/openshell/gateway@sha256:f0b36dba21d282c52e498c25289658cfd6cd4f343b0069fde5609e25b002cdea",
+    "sandbox": "ghcr.io/nvidia/openshell/sandbox@sha256:1038eb5c1f191fa3c34684fd7041b891c78ec570979d487f36e06e08f91bfb63",
+    "supervisor": "ghcr.io/nvidia/openshell/supervisor@sha256:ce859a7d77ee515d3fe0b3c7dc61286516f402eb1d25c761d806d9ae5ed96c0b"
+  },
+  "cli": {
+    "Linux-x86_64": {"asset": "openshell-x86_64-unknown-linux-musl.tar.gz", "sha256": "2951c67366f3e3584ed9cec8d49b9f0b0eefc8cacea8b0582ac164590492f136"},
+    "Linux-aarch64": {"asset": "openshell-aarch64-unknown-linux-musl.tar.gz", "sha256": "259452a6065c4f76e71884b84e8696cc0fec2f8a832891d333f268ca7bb55a21"},
+    "Darwin-arm64": {"asset": "openshell-aarch64-apple-darwin.tar.gz", "sha256": "334e9cf24994a5bfd34691e9835920da15f5ef224cc96be0d4751eadfa279897"}
+  },
+  "contracts": {"exec_flags": ["--no-login-shell", "--no-tty", "--tty", "--timeout", "--workdir"], "gateway_preflight": ["config", "preflight", "--path"]}
+}

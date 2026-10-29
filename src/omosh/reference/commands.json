@@ -1,0 +1,5072 @@
+[
+  {
+    "command": [
+      "sandbox",
+      "create"
+    ],
+    "help": "Create a sandbox.",
+    "fields": [
+      {
+        "key": "name",
+        "flag": "--name",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "Optional sandbox name (auto-generated when omitted).",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "template",
+        "flag": "--template",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "Create the sandbox from a named sandbox template.",
+        "choices": [],
+        "requires": [],
+        "conflicts": [
+          "from",
+          "gpu",
+          "cpu",
+          "memory",
+          "driver_config_json",
+          "envs",
+          "env_from"
+        ]
+      },
+      {
+        "key": "from",
+        "flag": "--from",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "Sandbox source: a rootfs tar archive (`.tar`, `.tar.gz`, or `.tgz`) or a container image reference (e.g., `myregistry.com/img:tag`).  To use a local Dockerfile, build and tag it with the container engine used by your local gateway, then pass the resulting image reference here. A rootfs tar is staged for the VM compute driver.",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "upload",
+        "flag": "--upload",
+        "type": "string",
+        "repeat": true,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "Upload local files into the sandbox before running.  Format: `<LOCAL_PATH>[:<SANDBOX_PATH>]`. When `SANDBOX_PATH` is omitted, files are uploaded to the container's working directory. Inside a Git work tree, `.gitignore` rules are applied by default. Outside a Git work tree, uploads proceed unfiltered with a warning. Filtering errors or empty selections stop the upload; use `--no-git-ignore` to intentionally upload everything.  Cannot be combined with a trailing command, because uploads finish after the main process starts. Create the sandbox without a command, then run the workload with `sandbox exec`.",
+        "choices": [],
+        "requires": [],
+        "conflicts": [
+          "command"
+        ]
+      },
+      {
+        "key": "no_git_ignore",
+        "flag": "--no-git-ignore",
+        "type": "bool",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "Disable `.gitignore` filtering for `--upload`.",
+        "choices": [],
+        "requires": [
+          "upload"
+        ],
+        "conflicts": []
+      },
+      {
+        "key": "keep",
+        "flag": "--keep",
+        "type": "bool",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "Deprecated compatibility flag. Sandboxes are kept by default.",
+        "choices": [],
+        "requires": [],
+        "conflicts": [
+          "no_keep"
+        ]
+      },
+      {
+        "key": "no_keep",
+        "flag": "--no-keep",
+        "type": "bool",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "Delete the sandbox after the initial command or shell exits.",
+        "choices": [],
+        "requires": [],
+        "conflicts": [
+          "keep",
+          "editor",
+          "forward",
+          "expose"
+        ]
+      },
+      {
+        "key": "editor",
+        "flag": "--editor",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "Launch a remote editor after the sandbox is ready. Keeps the sandbox alive and installs OpenShell-managed SSH config.",
+        "choices": [
+          "vscode",
+          "cursor"
+        ],
+        "requires": [],
+        "conflicts": [
+          "no_keep"
+        ]
+      },
+      {
+        "key": "gpu",
+        "flag": "--gpu",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "Request GPU resources for the sandbox.  Omit COUNT for the driver's default GPU selection, or pass COUNT to request a specific number of GPUs.",
+        "choices": [
+          "driver-default"
+        ],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "cpu",
+        "flag": "--cpu",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "CPU limit for the sandbox (for example: 500m, 1, 2.5).",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "memory",
+        "flag": "--memory",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "Memory limit for the sandbox (for example: 512Mi, 4Gi, 8G).",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "driver_config_json",
+        "flag": "--driver-config-json",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "Driver-keyed JSON object for driver-specific sandbox settings. Disabled unless the gateway administrator enables `allow_driver_config`. External resource attachments still require approval labels.  For Kubernetes, pass a value such as `{\"kubernetes\":{\"pod\":{\"node_selector\":{\"pool\":\"gpu\"}}}}`.",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "providers",
+        "flag": "--provider",
+        "type": "string",
+        "repeat": true,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "Attach a configured credential provider to the sandbox. Use providers for API keys, tokens, and other secrets so commands in the sandbox do not receive the real credential values. Repeatable.",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "policy",
+        "flag": "--policy",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "Path to a custom sandbox policy YAML file. Overrides the built-in default and the `OPENSHELL_SANDBOX_POLICY` env var.",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "forward",
+        "flag": "--forward",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "Forward a local port to the sandbox before the initial command or shell starts. Accepts [`bind_address`:]port (e.g. 8080, 0.0.0.0:8080). Keeps the sandbox alive.",
+        "choices": [],
+        "requires": [],
+        "conflicts": [
+          "no_keep"
+        ]
+      },
+      {
+        "key": "expose",
+        "flag": "--expose",
+        "type": "number",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "Expose a loopback HTTP or WebSocket service after the sandbox is ready. Keeps the sandbox alive. Use `openshell service expose` to add a named service.",
+        "choices": [],
+        "requires": [],
+        "conflicts": [
+          "no_keep"
+        ]
+      },
+      {
+        "key": "expose_authorization_mode",
+        "flag": "--expose-authorization-mode",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": true,
+        "default": null,
+        "help": "Handling for an incoming application Authorization header.",
+        "choices": [
+          "strip",
+          "bearer-passthrough"
+        ],
+        "requires": [
+          "expose"
+        ],
+        "conflicts": []
+      },
+      {
+        "key": "tty",
+        "flag": "--tty",
+        "type": "bool",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "Allocate a pseudo-terminal for the remote command. Defaults to auto-detection (on when stdin and stdout are terminals). Use --tty to force a PTY even when auto-detection fails, or --no-tty to disable.",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "no_tty",
+        "flag": "--no-tty",
+        "type": "bool",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "Disable pseudo-terminal allocation.",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "detach",
+        "flag": "--detach",
+        "type": "bool",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "Start the canonical main process without attaching to it.",
+        "choices": [],
+        "requires": [],
+        "conflicts": [
+          "editor"
+        ]
+      },
+      {
+        "key": "restart_policy",
+        "flag": "--restart-policy",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": "never",
+        "help": "Restart behavior after the canonical main process exits.",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "auto_providers",
+        "flag": "--auto-providers",
+        "type": "bool",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "Auto-create missing providers from local credentials.  Without this flag, an interactive prompt asks per-provider; in non-interactive mode the command errors.",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "no_auto_providers",
+        "flag": "--no-auto-providers",
+        "type": "bool",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "Never auto-create providers; error if required providers are missing.",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "labels",
+        "flag": "--label",
+        "type": "string",
+        "repeat": true,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "Attach labels to the sandbox (key=value format, repeatable).",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "annotations",
+        "flag": "--annotation",
+        "type": "string",
+        "repeat": true,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "Attach non-secret annotations to the sandbox (key=value format, repeatable). Values may contain `/`, spaces, and `=`.",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "envs",
+        "flag": "--env",
+        "type": "string",
+        "repeat": true,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "Set a non-secret environment variable in the sandbox. Do not use this option for API keys, tokens, or other secrets; create a provider and attach it with `--provider` instead. Repeatable. Each value is limited to 8 KiB and cannot contain a newline.",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "env_from",
+        "flag": "--env-from",
+        "type": "string",
+        "repeat": true,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "Set a sandbox environment variable from the CLI process environment.  Format: `KEY[=ENVVAR]`. When `ENVVAR` is omitted, `KEY` is used. The value does not appear in the CLI process arguments. Repeatable.",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "no_credential_warnings",
+        "flag": "--no-credential-warnings",
+        "type": "bool",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "Suppress warnings when --env values look like credentials.",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "approval_mode",
+        "flag": "--approval-mode",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": "manual",
+        "help": "Approval mode for agent-authored policy proposals.  `manual` (default): every proposal lands in the draft inbox for human review, regardless of the prover verdict.  `auto`: proposals whose prover delta is empty are approved automatically; proposals with findings still require human approval. Auto mode is an explicit opt-in — `OpenShell`'s default-deny posture is preserved unless you choose otherwise.",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "output",
+        "flag": "--output",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": "OutputFormat::Table",
+        "help": "Output format.",
+        "choices": [
+          "table",
+          "yaml",
+          "json"
+        ],
+        "requires": [],
+        "conflicts": [
+          "editor",
+          "no_keep",
+          "forward"
+        ]
+      },
+      {
+        "key": "command",
+        "flag": "",
+        "type": "string",
+        "repeat": true,
+        "last": true,
+        "required": false,
+        "default": null,
+        "help": "Command to run after \"--\" (defaults to an interactive shell). Each argument is limited to 32 KiB.",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      }
+    ]
+  },
+  {
+    "command": [
+      "sandbox",
+      "get"
+    ],
+    "help": "Fetch a sandbox by name.",
+    "fields": [
+      {
+        "key": "name",
+        "flag": "",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "Sandbox name (defaults to last-used sandbox).",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "policy_only",
+        "flag": "--policy-only",
+        "type": "bool",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "Print only the active policy YAML (same policy as the default view; stdout only).",
+        "choices": [],
+        "requires": [],
+        "conflicts": [
+          "output"
+        ]
+      },
+      {
+        "key": "output",
+        "flag": "--output",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": "OutputFormat::Table",
+        "help": "Output format.",
+        "choices": [
+          "table",
+          "yaml",
+          "json"
+        ],
+        "requires": [],
+        "conflicts": []
+      }
+    ]
+  },
+  {
+    "command": [
+      "sandbox",
+      "list"
+    ],
+    "help": "List sandboxes.",
+    "fields": [
+      {
+        "key": "page_size",
+        "flag": "--page-size",
+        "type": "number",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": "100",
+        "help": "Maximum number of sandboxes to return in this page.",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "page_token",
+        "flag": "--page-token",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": "",
+        "help": "Opaque continuation token from a previous page.",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "ids",
+        "flag": "--ids",
+        "type": "bool",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "Print only sandbox ids (one per line).",
+        "choices": [],
+        "requires": [],
+        "conflicts": [
+          "names",
+          "output"
+        ]
+      },
+      {
+        "key": "names",
+        "flag": "--names",
+        "type": "bool",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "Print only sandbox names (one per line).",
+        "choices": [],
+        "requires": [],
+        "conflicts": [
+          "ids",
+          "output"
+        ]
+      },
+      {
+        "key": "selector",
+        "flag": "--selector",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "Filter sandboxes by label selector (key1=value1,key2=value2).",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "output",
+        "flag": "--output",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": "OutputFormat::Table",
+        "help": "Output format.",
+        "choices": [
+          "table",
+          "yaml",
+          "json"
+        ],
+        "requires": [],
+        "conflicts": [
+          "ids",
+          "names"
+        ]
+      },
+      {
+        "key": "all_workspaces",
+        "flag": "--all-workspaces",
+        "type": "bool",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "List sandboxes across all workspaces (overrides --workspace).",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      }
+    ]
+  },
+  {
+    "command": [
+      "sandbox",
+      "delete"
+    ],
+    "help": "Delete a sandbox by name.",
+    "fields": [
+      {
+        "key": "names",
+        "flag": "",
+        "type": "string",
+        "repeat": true,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "Sandbox names.",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "all",
+        "flag": "--all",
+        "type": "bool",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "Delete all sandboxes.",
+        "choices": [],
+        "requires": [],
+        "conflicts": [
+          "names"
+        ]
+      }
+    ]
+  },
+  {
+    "command": [
+      "sandbox",
+      "stop"
+    ],
+    "help": "Stop a sandbox while preserving its workspace.",
+    "fields": [
+      {
+        "key": "name",
+        "flag": "",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "Sandbox name (defaults to last-used sandbox).",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      }
+    ]
+  },
+  {
+    "command": [
+      "sandbox",
+      "start"
+    ],
+    "help": "Start a stopped sandbox.",
+    "fields": [
+      {
+        "key": "name",
+        "flag": "",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "Sandbox name (defaults to last-used sandbox).",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      }
+    ]
+  },
+  {
+    "command": [
+      "sandbox",
+      "suspend"
+    ],
+    "help": "Suspend a ready sandbox and retain its memory state.  Requires a compute driver and isolation backend that support suspend and resume. Use `sandbox resume` to restore the sandbox.",
+    "fields": [
+      {
+        "key": "name",
+        "flag": "",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "Sandbox name (defaults to last-used sandbox).",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      }
+    ]
+  },
+  {
+    "command": [
+      "sandbox",
+      "resume"
+    ],
+    "help": "Resume a suspended sandbox from its retained memory state.",
+    "fields": [
+      {
+        "key": "name",
+        "flag": "",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "Sandbox name (defaults to last-used sandbox).",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      }
+    ]
+  },
+  {
+    "command": [
+      "sandbox",
+      "exec"
+    ],
+    "help": "Execute a command in a running sandbox.  Runs a command inside an existing sandbox using the gRPC exec endpoint. Output is streamed to the terminal in real-time. The CLI exits with the remote command's exit code.  For interactive shell sessions, use `sandbox connect` instead.  Examples: openshell sandbox exec my-sandbox -- ls -la /workspace openshell sandbox exec --name my-sandbox -- ls -la /workspace openshell sandbox exec -n my-sandbox --workdir /app -- python script.py echo \"hello\" | openshell sandbox exec -n my-sandbox -- cat",
+    "fields": [
+      {
+        "key": "sandbox",
+        "flag": "",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "Sandbox name (defaults to last-used sandbox).",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "name",
+        "flag": "--name",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "Sandbox name; same as the positional argument.",
+        "choices": [],
+        "requires": [],
+        "conflicts": [
+          "sandbox"
+        ]
+      },
+      {
+        "key": "workdir",
+        "flag": "--workdir",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "Working directory inside the sandbox.",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "timeout",
+        "flag": "--timeout",
+        "type": "number",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": "0",
+        "help": "Timeout in seconds (0 = no timeout).",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "tty",
+        "flag": "--tty",
+        "type": "bool",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "Allocate a pseudo-terminal for the remote command. Defaults to auto-detection (on when stdin and stdout are terminals). Use --tty to force a PTY even when auto-detection fails, or --no-tty to disable.",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "no_tty",
+        "flag": "--no-tty",
+        "type": "bool",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "Disable pseudo-terminal allocation.",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "no_login_shell",
+        "flag": "--no-login-shell",
+        "type": "bool",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "Run the command without sourcing shell login/profile startup files.  Default sources them so tool-specific env (`VIRTUAL_ENV`, etc.) is available. Use this for automation and managed checks that need predictable startup behavior — sandbox-user startup files cannot run before the requested command.",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "envs",
+        "flag": "--env",
+        "type": "string",
+        "repeat": true,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "Set a non-secret environment variable for the command. Do not use this option for API keys, tokens, or other secrets; attach a provider to the sandbox instead. Repeatable.",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "command",
+        "flag": "",
+        "type": "string",
+        "repeat": true,
+        "last": true,
+        "required": true,
+        "default": null,
+        "help": "Command and arguments to execute, after `--`.",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      }
+    ]
+  },
+  {
+    "command": [
+      "sandbox",
+      "connect"
+    ],
+    "help": "Connect to a sandbox.  When no name is given, reconnects to the last-used sandbox. Press Ctrl-D or Ctrl-P Ctrl-Q to disconnect without terminating the main process.",
+    "fields": [
+      {
+        "key": "name",
+        "flag": "",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "Sandbox name (defaults to last-used sandbox).",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "editor",
+        "flag": "--editor",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "Launch a remote editor instead of an interactive shell. Installs OpenShell-managed SSH config if needed.",
+        "choices": [
+          "vscode",
+          "cursor"
+        ],
+        "requires": [],
+        "conflicts": []
+      }
+    ]
+  },
+  {
+    "command": [
+      "sandbox",
+      "upload"
+    ],
+    "help": "Upload local files to a sandbox.  Inside a Git work tree, `.gitignore` rules are applied by default. Outside a Git work tree, uploads proceed unfiltered with a warning. Filtering errors or empty selections stop the upload; use `--no-git-ignore` to intentionally upload everything.",
+    "fields": [
+      {
+        "key": "name",
+        "flag": "",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": true,
+        "default": null,
+        "help": "Sandbox name.",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "local_path",
+        "flag": "",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": true,
+        "default": null,
+        "help": "Local path to upload.",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "dest",
+        "flag": "",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "Destination path in the sandbox (defaults to its working directory).  For an unfiltered single-file upload, an existing directory or a trailing slash places the file inside that directory. A missing nested path without a trailing slash renames the file.",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "no_git_ignore",
+        "flag": "--no-git-ignore",
+        "type": "bool",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "Disable `.gitignore` filtering (uploads everything).",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      }
+    ]
+  },
+  {
+    "command": [
+      "sandbox",
+      "download"
+    ],
+    "help": "Download files from a sandbox.",
+    "fields": [
+      {
+        "key": "name",
+        "flag": "",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": true,
+        "default": null,
+        "help": "Sandbox name.",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "sandbox_path",
+        "flag": "",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": true,
+        "default": null,
+        "help": "Sandbox path to download.",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "dest",
+        "flag": "",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "Local destination (defaults to `.`).",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      }
+    ]
+  },
+  {
+    "command": [
+      "sandbox",
+      "ssh-config"
+    ],
+    "help": "Print an SSH config entry for a sandbox.  Outputs a Host block suitable for appending to ~/.ssh/config, enabling tools like `VSCode` Remote-SSH to connect to the sandbox.",
+    "fields": [
+      {
+        "key": "name",
+        "flag": "",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "Sandbox name (defaults to last-used sandbox).",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      }
+    ]
+  },
+  {
+    "command": [
+      "sandbox",
+      "provider",
+      "list"
+    ],
+    "help": "List providers attached to a sandbox.",
+    "fields": [
+      {
+        "key": "name",
+        "flag": "",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "Sandbox name (defaults to last-used sandbox).",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "page_size",
+        "flag": "--page-size",
+        "type": "number",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": "100",
+        "help": "Maximum number of attached providers to return in this page.",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "page_token",
+        "flag": "--page-token",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": "",
+        "help": "Opaque continuation token from a previous page.",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "output",
+        "flag": "--output",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": "OutputFormat::Table",
+        "help": "Output format.",
+        "choices": [
+          "table",
+          "yaml",
+          "json"
+        ],
+        "requires": [],
+        "conflicts": []
+      }
+    ]
+  },
+  {
+    "command": [
+      "sandbox",
+      "provider",
+      "attach"
+    ],
+    "help": "Attach a provider to a sandbox.",
+    "fields": [
+      {
+        "key": "name",
+        "flag": "",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": true,
+        "default": null,
+        "help": "Sandbox name.",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "provider",
+        "flag": "",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": true,
+        "default": null,
+        "help": "Provider name to attach.",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "wait",
+        "flag": "--wait",
+        "type": "bool",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "Wait until the sandbox applies the credentials, policy, and environment for new processes.",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "timeout",
+        "flag": "--timeout",
+        "type": "number",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": "30",
+        "help": "Maximum wait in seconds after saving the change, shared by all selected sandboxes.",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "output",
+        "flag": "--output",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": "OutputFormat::Table",
+        "help": "Output format; JSON and YAML include change IDs and results for each sandbox.",
+        "choices": [
+          "table",
+          "yaml",
+          "json"
+        ],
+        "requires": [],
+        "conflicts": []
+      }
+    ]
+  },
+  {
+    "command": [
+      "sandbox",
+      "provider",
+      "detach"
+    ],
+    "help": "Detach a provider from a sandbox.",
+    "fields": [
+      {
+        "key": "name",
+        "flag": "",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": true,
+        "default": null,
+        "help": "Sandbox name.",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "provider",
+        "flag": "",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": true,
+        "default": null,
+        "help": "Provider name to detach.",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "wait",
+        "flag": "--wait",
+        "type": "bool",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "Wait until the sandbox applies the credentials, policy, and environment for new processes.",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "timeout",
+        "flag": "--timeout",
+        "type": "number",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": "30",
+        "help": "Maximum wait in seconds after saving the change, shared by all selected sandboxes.",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "output",
+        "flag": "--output",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": "OutputFormat::Table",
+        "help": "Output format; JSON and YAML include change IDs and results for each sandbox.",
+        "choices": [
+          "table",
+          "yaml",
+          "json"
+        ],
+        "requires": [],
+        "conflicts": []
+      }
+    ]
+  },
+  {
+    "command": [
+      "sandbox",
+      "provider",
+      "status"
+    ],
+    "help": "Check whether a sandbox has applied a provider change.",
+    "fields": [
+      {
+        "key": "name",
+        "flag": "",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": true,
+        "default": null,
+        "help": "Sandbox name.",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "provider",
+        "flag": "",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": true,
+        "default": null,
+        "help": "Provider whose attachment or revocation is being inspected.",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "receipt",
+        "flag": "--receipt",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "Change ID returned by attach, detach, or update; omitted means the latest saved state.",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "wait",
+        "flag": "--wait",
+        "type": "bool",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "Wait until the sandbox applies the credentials, policy, and environment for new processes.",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "timeout",
+        "flag": "--timeout",
+        "type": "number",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": "30",
+        "help": "Maximum wait in seconds after saving the change, shared by all selected sandboxes.",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "output",
+        "flag": "--output",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": "OutputFormat::Table",
+        "help": "Output format; JSON and YAML include change IDs and results for each sandbox.",
+        "choices": [
+          "table",
+          "yaml",
+          "json"
+        ],
+        "requires": [],
+        "conflicts": []
+      }
+    ]
+  },
+  {
+    "command": [
+      "sandbox",
+      "template",
+      "create"
+    ],
+    "help": "Create a reusable sandbox workload template.",
+    "fields": [
+      {
+        "key": "name",
+        "flag": "",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": true,
+        "default": null,
+        "help": "Template name.",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "image",
+        "flag": "--image",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "Container image for sandboxes created from this template. When omitted, the gateway's default sandbox image is used at create time.",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "cpu",
+        "flag": "--cpu",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "CPU limit for sandboxes created from this template (for example: 500m, 1, 2.5).",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "memory",
+        "flag": "--memory",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "Memory limit for sandboxes created from this template (for example: 512Mi, 4Gi, 8G).",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "gpu",
+        "flag": "--gpu",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "Request GPU resources for sandboxes created from this template.  Omit COUNT for the driver's default GPU selection, or pass COUNT to request a specific number of GPUs.",
+        "choices": [
+          "driver-default"
+        ],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "driver_config_json",
+        "flag": "--driver-config-json",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "Driver-keyed JSON object for driver-specific sandbox settings. Requires administrator opt-in; resource admission still applies.",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "ready_within",
+        "flag": "--ready-within",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "Target startup readiness duration for this template (for example: 30s, 5m, 1h).",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "max_burst",
+        "flag": "--max-burst",
+        "type": "number",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "Maximum startup burst associated with this template.",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "labels",
+        "flag": "--label",
+        "type": "string",
+        "repeat": true,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "Attach labels to the template (key=value format, repeatable).",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "annotations",
+        "flag": "--annotation",
+        "type": "string",
+        "repeat": true,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "Attach annotations to the template (key=value format, repeatable).",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "envs",
+        "flag": "--env",
+        "type": "string",
+        "repeat": true,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "Set a non-secret environment variable in sandboxes created from this template. Do not use this option for API keys, tokens, or other secrets; create a provider and attach it when creating sandboxes instead. Repeatable.",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "no_credential_warnings",
+        "flag": "--no-credential-warnings",
+        "type": "bool",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "Suppress warnings when --env values look like credentials.",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "output",
+        "flag": "--output",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": "OutputFormat::Table",
+        "help": "Output format.",
+        "choices": [
+          "table",
+          "yaml",
+          "json"
+        ],
+        "requires": [],
+        "conflicts": []
+      }
+    ]
+  },
+  {
+    "command": [
+      "sandbox",
+      "template",
+      "get"
+    ],
+    "help": "Fetch a sandbox workload template by name.",
+    "fields": [
+      {
+        "key": "name",
+        "flag": "",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": true,
+        "default": null,
+        "help": "Template name.",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "output",
+        "flag": "--output",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": "OutputFormat::Table",
+        "help": "Output format.",
+        "choices": [
+          "table",
+          "yaml",
+          "json"
+        ],
+        "requires": [],
+        "conflicts": []
+      }
+    ]
+  },
+  {
+    "command": [
+      "sandbox",
+      "template",
+      "list"
+    ],
+    "help": "List sandbox workload templates.",
+    "fields": [
+      {
+        "key": "page_size",
+        "flag": "--page-size",
+        "type": "number",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": "100",
+        "help": "Maximum number of templates to return in this page.",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "page_token",
+        "flag": "--page-token",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": "",
+        "help": "Opaque continuation token from a previous page.",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "label_selector",
+        "flag": "--label-selector",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "Filter templates by labels, e.g. env=prod,team=runtime.",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "names",
+        "flag": "--names",
+        "type": "bool",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "Print only template names (one per line).",
+        "choices": [],
+        "requires": [],
+        "conflicts": [
+          "output"
+        ]
+      },
+      {
+        "key": "output",
+        "flag": "--output",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": "OutputFormat::Table",
+        "help": "Output format.",
+        "choices": [
+          "table",
+          "yaml",
+          "json"
+        ],
+        "requires": [],
+        "conflicts": [
+          "names"
+        ]
+      },
+      {
+        "key": "all_workspaces",
+        "flag": "--all-workspaces",
+        "type": "bool",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "List templates across all workspaces (overrides --workspace).",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      }
+    ]
+  },
+  {
+    "command": [
+      "sandbox",
+      "template",
+      "delete"
+    ],
+    "help": "Delete sandbox workload templates.",
+    "fields": [
+      {
+        "key": "names",
+        "flag": "",
+        "type": "string",
+        "repeat": true,
+        "last": false,
+        "required": true,
+        "default": null,
+        "help": "Template names.",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      }
+    ]
+  },
+  {
+    "command": [
+      "forward",
+      "start"
+    ],
+    "help": "Start forwarding a local port to a sandbox.",
+    "fields": [
+      {
+        "key": "port",
+        "flag": "",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": true,
+        "default": null,
+        "help": "Port to forward: [`bind_address`:]port (e.g. 8080, 0.0.0.0:8080).",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "name",
+        "flag": "",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "Sandbox name (defaults to last-used sandbox).",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "background",
+        "flag": "--background",
+        "type": "bool",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "Run the forward in the background and exit immediately.",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      }
+    ]
+  },
+  {
+    "command": [
+      "forward",
+      "stop"
+    ],
+    "help": "Stop a background port forward.",
+    "fields": [
+      {
+        "key": "port",
+        "flag": "",
+        "type": "number",
+        "repeat": false,
+        "last": false,
+        "required": true,
+        "default": null,
+        "help": "Port that was forwarded.",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "name",
+        "flag": "",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "Sandbox name (auto-detected from active forwards if omitted).",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      }
+    ]
+  },
+  {
+    "command": [
+      "forward",
+      "list"
+    ],
+    "help": "List tracked port forwards.",
+    "fields": [
+      {
+        "key": "output",
+        "flag": "--output",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": "OutputFormat::Table",
+        "help": "Output format.",
+        "choices": [
+          "table",
+          "yaml",
+          "json"
+        ],
+        "requires": [],
+        "conflicts": []
+      }
+    ]
+  },
+  {
+    "command": [
+      "forward",
+      "service"
+    ],
+    "help": "Forward a local TCP port to a loopback service inside a sandbox over gRPC.",
+    "fields": [
+      {
+        "key": "name",
+        "flag": "",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "Sandbox name (defaults to last-used sandbox).",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "target_port",
+        "flag": "--target-port",
+        "type": "number",
+        "repeat": false,
+        "last": false,
+        "required": true,
+        "default": null,
+        "help": "Target service port inside the sandbox.",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "target_host",
+        "flag": "--target-host",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": "127.0.0.1",
+        "help": "Target service host inside the sandbox. Phase 1 accepts loopback only.",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "local",
+        "flag": "--local",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "Local bind address and port: `[bind_address:]port`. Defaults to the target port. Use port 0 for dynamic assignment.",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      }
+    ]
+  },
+  {
+    "command": [
+      "service",
+      "expose"
+    ],
+    "help": "Expose an HTTP service running inside a sandbox.",
+    "fields": [
+      {
+        "key": "sandbox",
+        "flag": "",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": true,
+        "default": null,
+        "help": "Sandbox name.",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "target_port",
+        "flag": "",
+        "type": "number",
+        "repeat": false,
+        "last": false,
+        "required": true,
+        "default": null,
+        "help": "Loopback TCP port inside the sandbox.",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "service",
+        "flag": "",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "Service name.",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "authorization_mode",
+        "flag": "--authorization-mode",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": true,
+        "default": null,
+        "help": "Handling for an incoming application Authorization header.",
+        "choices": [
+          "strip",
+          "bearer-passthrough"
+        ],
+        "requires": [],
+        "conflicts": []
+      }
+    ]
+  },
+  {
+    "command": [
+      "service",
+      "list"
+    ],
+    "help": "List exposed sandbox service endpoints.",
+    "fields": [
+      {
+        "key": "sandbox",
+        "flag": "",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "Sandbox name.",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "page_size",
+        "flag": "--page-size",
+        "type": "number",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": "100",
+        "help": "Maximum number of endpoints to return in this page.",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "page_token",
+        "flag": "--page-token",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": "",
+        "help": "Opaque continuation token from a previous page.",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "all_workspaces",
+        "flag": "--all-workspaces",
+        "type": "bool",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "List services across all workspaces (overrides --workspace).",
+        "choices": [],
+        "requires": [],
+        "conflicts": [
+          "sandbox"
+        ]
+      },
+      {
+        "key": "output",
+        "flag": "--output",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": "OutputFormat::Table",
+        "help": "Output format.",
+        "choices": [
+          "table",
+          "yaml",
+          "json"
+        ],
+        "requires": [],
+        "conflicts": []
+      }
+    ]
+  },
+  {
+    "command": [
+      "service",
+      "get"
+    ],
+    "help": "Show one exposed sandbox service endpoint.",
+    "fields": [
+      {
+        "key": "sandbox",
+        "flag": "",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": true,
+        "default": null,
+        "help": "Sandbox name.",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "service",
+        "flag": "",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "Service name. Omit for the unnamed endpoint.",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      }
+    ]
+  },
+  {
+    "command": [
+      "service",
+      "delete"
+    ],
+    "help": "Delete one exposed sandbox service endpoint.",
+    "fields": [
+      {
+        "key": "sandbox",
+        "flag": "",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": true,
+        "default": null,
+        "help": "Sandbox name.",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "service",
+        "flag": "",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "Service name. Omit for the unnamed endpoint.",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      }
+    ]
+  },
+  {
+    "command": [
+      "logs"
+    ],
+    "help": "View sandbox logs.",
+    "fields": [
+      {
+        "key": "name",
+        "flag": "",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "Sandbox name (defaults to last-used sandbox).",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "n",
+        "flag": "-n",
+        "type": "number",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": "200",
+        "help": "Number of log lines to return.",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "tail",
+        "flag": "--tail",
+        "type": "bool",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "Stream live logs.",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "since",
+        "flag": "--since",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "Only show logs from this duration ago (e.g. 5m, 1h, 30s).",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "source",
+        "flag": "--source",
+        "type": "string",
+        "repeat": true,
+        "last": false,
+        "required": false,
+        "default": "all",
+        "help": "Filter by log source: \"gateway\", \"sandbox\", or \"all\" (default). Can be specified multiple times: --source gateway --source sandbox",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "level",
+        "flag": "--level",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": "",
+        "help": "Minimum log level to display: error, warn, info (default), debug, trace.",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      }
+    ]
+  },
+  {
+    "command": [
+      "policy",
+      "set"
+    ],
+    "help": "Update policy on a live sandbox.",
+    "fields": [
+      {
+        "key": "name",
+        "flag": "",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "Sandbox name (defaults to last-used sandbox when not using --global).",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "policy",
+        "flag": "--policy",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": true,
+        "default": null,
+        "help": "Path to the policy YAML file.",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "global",
+        "flag": "--global",
+        "type": "bool",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "Apply as a gateway-global policy for all sandboxes.",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "yes",
+        "flag": "--yes",
+        "type": "bool",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "Skip the confirmation prompt for global policy updates.",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "wait",
+        "flag": "--wait",
+        "type": "bool",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "Wait for the sandbox to load the policy.",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "timeout",
+        "flag": "--timeout",
+        "type": "number",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": "60",
+        "help": "Timeout for --wait in seconds.",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      }
+    ]
+  },
+  {
+    "command": [
+      "policy",
+      "update"
+    ],
+    "help": "Incrementally update policy on a live sandbox.",
+    "fields": [
+      {
+        "key": "name",
+        "flag": "",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "Sandbox name (defaults to last-used sandbox).",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "add_endpoints",
+        "flag": "--add-endpoint",
+        "type": "string",
+        "repeat": true,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "Add or merge an endpoint: host:port[:access[:protocol[:enforcement[:options]]]]. Options include allowed-ip=..., credential rewrite flags, and allow-uninspected-credentials.",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "remove_endpoints",
+        "flag": "--remove-endpoint",
+        "type": "string",
+        "repeat": true,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "Remove an endpoint: host:port.",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "add_allow",
+        "flag": "--add-allow",
+        "type": "string",
+        "repeat": true,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "Append an allow rule: `host:port[,port...]:METHOD:path_glob`. List every port on the target endpoint. Requires --rule-name and the complete --binary list or --any-binary.",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "add_deny",
+        "flag": "--add-deny",
+        "type": "string",
+        "repeat": true,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "Append a deny rule: `host:port[,port...]:METHOD:path_glob`. List every port on the target endpoint. Requires --rule-name and the complete --binary list or --any-binary.",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "remove_rules",
+        "flag": "--remove-rule",
+        "type": "string",
+        "repeat": true,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "Remove a network rule by name.",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "binaries",
+        "flag": "--binary",
+        "type": "string",
+        "repeat": true,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "Add a binary to --add-endpoint, or declare every binary of an L7 target rule.",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "rule_name",
+        "flag": "--rule-name",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "Name the target rule for L7 appends, or override one --add-endpoint rule name.",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "any_binary",
+        "flag": "--any-binary",
+        "type": "bool",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "Explicitly declare that the target rule for L7 appends allows any binary.",
+        "choices": [],
+        "requires": [],
+        "conflicts": [
+          "binaries"
+        ]
+      },
+      {
+        "key": "endpoint_path",
+        "flag": "--endpoint-path",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "Select an exact endpoint path for L7 appends; an empty value selects no path. This is distinct from the appended method/path matcher.",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "dry_run",
+        "flag": "--dry-run",
+        "type": "bool",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "Preview the merged policy without sending it to the gateway.",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "wait",
+        "flag": "--wait",
+        "type": "bool",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "Wait for the sandbox to load the policy revision.",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "timeout",
+        "flag": "--timeout",
+        "type": "number",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": "60",
+        "help": "Timeout for --wait in seconds.",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      }
+    ]
+  },
+  {
+    "command": [
+      "policy",
+      "get"
+    ],
+    "help": "Show current effective policy for a sandbox or a stored global policy.",
+    "fields": [
+      {
+        "key": "name",
+        "flag": "",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "Sandbox name (defaults to last-used sandbox). Ignored with --global.",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "rev",
+        "flag": "--rev",
+        "type": "number",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": "0",
+        "help": "Show a specific stored policy revision. Default shows the current effective policy.",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "full",
+        "flag": "--full",
+        "type": "bool",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "Include the effective policy payload, including provider-composed entries.",
+        "choices": [],
+        "requires": [],
+        "conflicts": [
+          "base"
+        ]
+      },
+      {
+        "key": "base",
+        "flag": "--base",
+        "type": "bool",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "Include the base policy payload without provider-composed entries.",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "output",
+        "flag": "--output",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": "PolicyGetOutput::Table",
+        "help": "Output format.",
+        "choices": [
+          "table",
+          "json"
+        ],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "global",
+        "flag": "--global",
+        "type": "bool",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "Show the global policy revision.",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      }
+    ]
+  },
+  {
+    "command": [
+      "policy",
+      "list"
+    ],
+    "help": "List policy history for a sandbox or the global policy.",
+    "fields": [
+      {
+        "key": "name",
+        "flag": "",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "Sandbox name (defaults to last-used sandbox). Ignored with --global.",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "page_size",
+        "flag": "--page-size",
+        "type": "number",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": "20",
+        "help": "Maximum number of revisions to return in this page.",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "page_token",
+        "flag": "--page-token",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": "",
+        "help": "Opaque continuation token from a previous page.",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "global",
+        "flag": "--global",
+        "type": "bool",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "List global policy revisions.",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "output",
+        "flag": "--output",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": "OutputFormat::Table",
+        "help": "Output format.",
+        "choices": [
+          "table",
+          "yaml",
+          "json"
+        ],
+        "requires": [],
+        "conflicts": []
+      }
+    ]
+  },
+  {
+    "command": [
+      "policy",
+      "delete"
+    ],
+    "help": "Delete the gateway-global policy lock, restoring sandbox-level policy control.",
+    "fields": [
+      {
+        "key": "global",
+        "flag": "--global",
+        "type": "bool",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "Delete the global policy setting.",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "yes",
+        "flag": "--yes",
+        "type": "bool",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "Skip the confirmation prompt for global policy delete.",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      }
+    ]
+  },
+  {
+    "command": [
+      "settings",
+      "get"
+    ],
+    "help": "Show effective settings for a sandbox or gateway-global scope.",
+    "fields": [
+      {
+        "key": "name",
+        "flag": "",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "Sandbox name (defaults to last-used sandbox).",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "global",
+        "flag": "--global",
+        "type": "bool",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "Show gateway-global settings.",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "json",
+        "flag": "--json",
+        "type": "bool",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "Output as JSON.",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      }
+    ]
+  },
+  {
+    "command": [
+      "settings",
+      "set"
+    ],
+    "help": "Set a single setting key.",
+    "fields": [
+      {
+        "key": "name",
+        "flag": "",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "Sandbox name (defaults to last-used sandbox when not using --global).",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "key",
+        "flag": "--key",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": true,
+        "default": null,
+        "help": "Setting key.",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "value",
+        "flag": "--value",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": true,
+        "default": null,
+        "help": "Setting value (string input; bool keys accept true/false/yes/no/1/0).",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "global",
+        "flag": "--global",
+        "type": "bool",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "Apply at gateway-global scope.",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "yes",
+        "flag": "--yes",
+        "type": "bool",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "Skip the confirmation prompt for global setting updates.",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      }
+    ]
+  },
+  {
+    "command": [
+      "settings",
+      "delete"
+    ],
+    "help": "Delete a setting key (sandbox-scoped or gateway-global).",
+    "fields": [
+      {
+        "key": "name",
+        "flag": "",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "Sandbox name (defaults to last-used sandbox when not using --global).",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "key",
+        "flag": "--key",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": true,
+        "default": null,
+        "help": "Setting key.",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "global",
+        "flag": "--global",
+        "type": "bool",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "Delete at gateway-global scope.",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "yes",
+        "flag": "--yes",
+        "type": "bool",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "Skip the confirmation prompt for global setting delete.",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      }
+    ]
+  },
+  {
+    "command": [
+      "rule",
+      "get"
+    ],
+    "help": "Show network rules for a sandbox.",
+    "fields": [
+      {
+        "key": "name",
+        "flag": "",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "Sandbox name (defaults to last-used sandbox).",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "status",
+        "flag": "--status",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "Filter by status (pending, approved, rejected).",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      }
+    ]
+  },
+  {
+    "command": [
+      "rule",
+      "approve"
+    ],
+    "help": "Approve a network rule.",
+    "fields": [
+      {
+        "key": "name",
+        "flag": "",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "Sandbox name (defaults to last-used sandbox).",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "chunk_id",
+        "flag": "--chunk-id",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": true,
+        "default": null,
+        "help": "Chunk ID to approve.",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      }
+    ]
+  },
+  {
+    "command": [
+      "rule",
+      "reject"
+    ],
+    "help": "Reject a network rule.",
+    "fields": [
+      {
+        "key": "name",
+        "flag": "",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "Sandbox name (defaults to last-used sandbox).",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "chunk_id",
+        "flag": "--chunk-id",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": true,
+        "default": null,
+        "help": "Chunk ID to reject.",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "reason",
+        "flag": "--reason",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": "",
+        "help": "Reason for rejection.",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      }
+    ]
+  },
+  {
+    "command": [
+      "rule",
+      "approve-all"
+    ],
+    "help": "Approve all pending network rules.",
+    "fields": [
+      {
+        "key": "name",
+        "flag": "",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "Sandbox name (defaults to last-used sandbox).",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "include_security_flagged",
+        "flag": "--include-security-flagged",
+        "type": "bool",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "Also approve security-flagged rules.",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      }
+    ]
+  },
+  {
+    "command": [
+      "rule",
+      "clear"
+    ],
+    "help": "Clear all pending network rules.",
+    "fields": [
+      {
+        "key": "name",
+        "flag": "",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "Sandbox name (defaults to last-used sandbox).",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      }
+    ]
+  },
+  {
+    "command": [
+      "rule",
+      "history"
+    ],
+    "help": "Show network rule history.",
+    "fields": [
+      {
+        "key": "name",
+        "flag": "",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "Sandbox name (defaults to last-used sandbox).",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      }
+    ]
+  },
+  {
+    "command": [
+      "provider",
+      "create"
+    ],
+    "help": "Create a provider config.",
+    "fields": [
+      {
+        "key": "name",
+        "flag": "--name",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": true,
+        "default": null,
+        "help": "Provider name.",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "provider_type",
+        "flag": "--type",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": true,
+        "default": null,
+        "help": "Provider type.",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "labels",
+        "flag": "--label",
+        "type": "string",
+        "repeat": true,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "Labels to attach to the provider (KEY=VALUE, repeatable).",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "from_existing",
+        "flag": "--from-existing",
+        "type": "bool",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "Load provider credentials/config from existing local state.",
+        "choices": [],
+        "requires": [],
+        "conflicts": [
+          "credentials",
+          "from_gcloud_adc",
+          "runtime_credentials",
+          "from_oidc_token"
+        ]
+      },
+      {
+        "key": "credentials",
+        "flag": "--credential",
+        "type": "string",
+        "repeat": true,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "Provider credential pair (`KEY=VALUE`) or env lookup key (`KEY`).",
+        "choices": [],
+        "requires": [],
+        "conflicts": [
+          "from_existing",
+          "from_gcloud_adc",
+          "runtime_credentials"
+        ]
+      },
+      {
+        "key": "from_gcloud_adc",
+        "flag": "--from-gcloud-adc",
+        "type": "bool",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "Configure credentials from gcloud Application Default Credentials (`~/.config/gcloud/application_default_credentials.json`). Valid for providers whose profile declares an ADC-compatible credential.",
+        "choices": [],
+        "requires": [],
+        "conflicts": [
+          "from_existing",
+          "credentials",
+          "runtime_credentials",
+          "from_oidc_token"
+        ]
+      },
+      {
+        "key": "from_oidc_token",
+        "flag": "--from-oidc-token",
+        "type": "bool",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "Store the active gateway OIDC access token as the named provider credential.",
+        "choices": [],
+        "requires": [],
+        "conflicts": [
+          "from_existing",
+          "from_gcloud_adc",
+          "runtime_credentials"
+        ]
+      },
+      {
+        "key": "runtime_credentials",
+        "flag": "--runtime-credentials",
+        "type": "bool",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "Create a provider whose required credentials are resolved at runtime by the gateway/sandbox.",
+        "choices": [],
+        "requires": [],
+        "conflicts": [
+          "from_existing",
+          "credentials",
+          "from_gcloud_adc",
+          "from_oidc_token"
+        ]
+      },
+      {
+        "key": "config",
+        "flag": "--config",
+        "type": "string",
+        "repeat": true,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "Provider config key/value pair.",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "global_profile",
+        "flag": "--global-profile",
+        "type": "bool",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "Use a platform-scoped (global) provider profile instead of a workspace-scoped one.",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      }
+    ]
+  },
+  {
+    "command": [
+      "provider",
+      "refresh",
+      "status"
+    ],
+    "help": "Show provider credential refresh status.",
+    "fields": [
+      {
+        "key": "name",
+        "flag": "",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": true,
+        "default": null,
+        "help": "Provider name.",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "credential_key",
+        "flag": "--credential-key",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "Optional credential key to filter by.",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      }
+    ]
+  },
+  {
+    "command": [
+      "provider",
+      "refresh",
+      "configure"
+    ],
+    "help": "Configure refresh metadata for a provider credential.",
+    "fields": [
+      {
+        "key": "name",
+        "flag": "",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": true,
+        "default": null,
+        "help": "Provider name.",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "credential_key",
+        "flag": "--credential-key",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": true,
+        "default": null,
+        "help": "Injectable credential key, for example `MS_GRAPH_ACCESS_TOKEN`.",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "strategy",
+        "flag": "--strategy",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": true,
+        "default": null,
+        "help": "Refresh strategy.",
+        "choices": [
+          "oauth2-refresh-token",
+          "oauth2-client-credentials",
+          "google-service-account-jwt",
+          "aws-sts-assume-role"
+        ],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "material",
+        "flag": "--material",
+        "type": "string",
+        "repeat": true,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "Non-injectable refresh material (`KEY=VALUE`).",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "secret_material_env",
+        "flag": "--secret-material-env",
+        "type": "string",
+        "repeat": true,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "Secret refresh material resolved from the CLI environment (`ENVVAR` defaults to `KEY`); `KEY` is auto-marked secret.",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "secret_material_keys",
+        "flag": "--secret-material-key",
+        "type": "string",
+        "repeat": true,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "Material keys that are secret and must not be exposed.",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "credential_expires_at",
+        "flag": "--credential-expires-at",
+        "type": "number",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "Expiry for the current credential. Accepts epoch milliseconds or RFC3339.",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      }
+    ]
+  },
+  {
+    "command": [
+      "provider",
+      "refresh",
+      "rotate"
+    ],
+    "help": "Record a gateway-owned credential rotation request.",
+    "fields": [
+      {
+        "key": "name",
+        "flag": "",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": true,
+        "default": null,
+        "help": "Provider name.",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "credential_key",
+        "flag": "--credential-key",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": true,
+        "default": null,
+        "help": "Injectable credential key, for example `MS_GRAPH_ACCESS_TOKEN`.",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      }
+    ]
+  },
+  {
+    "command": [
+      "provider",
+      "refresh",
+      "delete"
+    ],
+    "help": "Delete refresh metadata for a provider credential.",
+    "fields": [
+      {
+        "key": "name",
+        "flag": "",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": true,
+        "default": null,
+        "help": "Provider name.",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "credential_key",
+        "flag": "--credential-key",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": true,
+        "default": null,
+        "help": "Injectable credential key, for example `MS_GRAPH_ACCESS_TOKEN`.",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      }
+    ]
+  },
+  {
+    "command": [
+      "provider",
+      "get"
+    ],
+    "help": "Fetch a provider by name.",
+    "fields": [
+      {
+        "key": "name",
+        "flag": "",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": true,
+        "default": null,
+        "help": "Provider name.",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      }
+    ]
+  },
+  {
+    "command": [
+      "provider",
+      "list"
+    ],
+    "help": "List providers.",
+    "fields": [
+      {
+        "key": "page_size",
+        "flag": "--page-size",
+        "type": "number",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": "100",
+        "help": "Maximum number of providers to return in this page.",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "page_token",
+        "flag": "--page-token",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": "",
+        "help": "Opaque continuation token from a previous page.",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "label_selector",
+        "flag": "--label-selector",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "Filter providers by labels (e.g. env=dev,team=ml).",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "names",
+        "flag": "--names",
+        "type": "bool",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "Print only provider names, one per line.",
+        "choices": [],
+        "requires": [],
+        "conflicts": [
+          "output"
+        ]
+      },
+      {
+        "key": "output",
+        "flag": "--output",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": "OutputFormat::Table",
+        "help": "Output format.",
+        "choices": [
+          "table",
+          "yaml",
+          "json"
+        ],
+        "requires": [],
+        "conflicts": [
+          "names"
+        ]
+      },
+      {
+        "key": "all_workspaces",
+        "flag": "--all-workspaces",
+        "type": "bool",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "List providers across all workspaces (overrides --workspace).",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      }
+    ]
+  },
+  {
+    "command": [
+      "provider",
+      "list-profiles"
+    ],
+    "help": "List available provider profiles (alias for `profile list --type provider`).",
+    "fields": [
+      {
+        "key": "output",
+        "flag": "--output",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": "OutputFormat::Table",
+        "help": "Output format.",
+        "choices": [
+          "table",
+          "yaml",
+          "json"
+        ],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "global",
+        "flag": "--global",
+        "type": "bool",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "List platform-scoped profiles (ignores --workspace).",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      }
+    ]
+  },
+  {
+    "command": [
+      "provider",
+      "profile",
+      "list"
+    ],
+    "help": "List available profiles.",
+    "fields": [
+      {
+        "key": "profile_type",
+        "flag": "--type",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "Filter profiles by type.",
+        "choices": [
+          "provider"
+        ],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "output",
+        "flag": "--output",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": "OutputFormat::Table",
+        "help": "Output format.",
+        "choices": [
+          "table",
+          "yaml",
+          "json"
+        ],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "global",
+        "flag": "--global",
+        "type": "bool",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "List platform-scoped profiles (ignores --workspace).",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      }
+    ]
+  },
+  {
+    "command": [
+      "provider",
+      "profile",
+      "describe"
+    ],
+    "help": "Describe a profile's credentials, endpoints, and policy defaults.",
+    "fields": [
+      {
+        "key": "id",
+        "flag": "",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": true,
+        "default": null,
+        "help": "Profile id.",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "output",
+        "flag": "--output",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": "OutputFormat::Table",
+        "help": "Output format.",
+        "choices": [
+          "table",
+          "yaml",
+          "json"
+        ],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "global",
+        "flag": "--global",
+        "type": "bool",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "Describe a platform-scoped profile (ignores --workspace).",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      }
+    ]
+  },
+  {
+    "command": [
+      "provider",
+      "profile",
+      "export"
+    ],
+    "help": "Export a provider profile.",
+    "fields": [
+      {
+        "key": "id",
+        "flag": "",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": true,
+        "default": null,
+        "help": "Provider profile id.",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "output",
+        "flag": "--output",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": "OutputFormat::Yaml",
+        "help": "Output format.",
+        "choices": [
+          "table",
+          "yaml",
+          "json"
+        ],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "global",
+        "flag": "--global",
+        "type": "bool",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "Target platform-scoped profiles (ignores --workspace).",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      }
+    ]
+  },
+  {
+    "command": [
+      "provider",
+      "profile",
+      "import"
+    ],
+    "help": "Import provider profiles from a file, directory, or HTTP URL.",
+    "fields": [
+      {
+        "key": "file",
+        "flag": "--file",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "Profile file to import.",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "from",
+        "flag": "--from",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "Directory containing profile files to import.",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "url",
+        "flag": "--url",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "HTTP or HTTPS URL of one YAML or JSON profile.",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "global",
+        "flag": "--global",
+        "type": "bool",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "Import as platform-scoped profiles (ignores --workspace).",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      }
+    ]
+  },
+  {
+    "command": [
+      "provider",
+      "profile",
+      "update"
+    ],
+    "help": "Update an existing custom provider profile from a file.",
+    "fields": [
+      {
+        "key": "id",
+        "flag": "",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": true,
+        "default": null,
+        "help": "Existing provider profile id to update.",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "file",
+        "flag": "--file",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": true,
+        "default": null,
+        "help": "Profile file to update.",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "global",
+        "flag": "--global",
+        "type": "bool",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "Target platform-scoped profile (ignores --workspace).",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      }
+    ]
+  },
+  {
+    "command": [
+      "provider",
+      "profile",
+      "lint"
+    ],
+    "help": "Validate provider profile files without registering them.",
+    "fields": [
+      {
+        "key": "file",
+        "flag": "--file",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "Profile file to lint.",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "from",
+        "flag": "--from",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "Directory containing profile files to lint.",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "url",
+        "flag": "--url",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "HTTP or HTTPS URL of one YAML or JSON profile.",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "global",
+        "flag": "--global",
+        "type": "bool",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "Lint against platform scope (ignores --workspace).",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      }
+    ]
+  },
+  {
+    "command": [
+      "provider",
+      "profile",
+      "delete"
+    ],
+    "help": "Delete a custom provider profile.",
+    "fields": [
+      {
+        "key": "ids",
+        "flag": "",
+        "type": "string",
+        "repeat": true,
+        "last": false,
+        "required": true,
+        "default": null,
+        "help": "Provider profile id(s).",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "global",
+        "flag": "--global",
+        "type": "bool",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "Target platform-scoped profile (ignores --workspace).",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      }
+    ]
+  },
+  {
+    "command": [
+      "provider",
+      "update"
+    ],
+    "help": "Update an existing provider's credentials or config.",
+    "fields": [
+      {
+        "key": "name",
+        "flag": "",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": true,
+        "default": null,
+        "help": "Provider name.",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "from_existing",
+        "flag": "--from-existing",
+        "type": "bool",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "Re-discover credentials from existing local state (e.g. env vars, config files).",
+        "choices": [],
+        "requires": [],
+        "conflicts": [
+          "credentials",
+          "from_oidc_token"
+        ]
+      },
+      {
+        "key": "from_oidc_token",
+        "flag": "--from-oidc-token",
+        "type": "bool",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "Store the active gateway OIDC access token as the named provider credential.",
+        "choices": [],
+        "requires": [],
+        "conflicts": [
+          "from_existing"
+        ]
+      },
+      {
+        "key": "credentials",
+        "flag": "--credential",
+        "type": "string",
+        "repeat": true,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "Provider credential pair (`KEY=VALUE`) or env lookup key (`KEY`).",
+        "choices": [],
+        "requires": [],
+        "conflicts": [
+          "from_existing"
+        ]
+      },
+      {
+        "key": "config",
+        "flag": "--config",
+        "type": "string",
+        "repeat": true,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "Provider config key/value pair.",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "credential_expires_at",
+        "flag": "--credential-expires-at",
+        "type": "string",
+        "repeat": true,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "Credential expiry (`KEY=TIMESTAMP`). Accepts epoch milliseconds or RFC3339. A zero timestamp clears expiry.",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "wait",
+        "flag": "--wait",
+        "type": "bool",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "Wait until the sandbox applies the credentials, policy, and environment for new processes.",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "timeout",
+        "flag": "--timeout",
+        "type": "number",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": "30",
+        "help": "Maximum wait in seconds after saving the change, shared by all selected sandboxes.",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "output",
+        "flag": "--output",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": "OutputFormat::Table",
+        "help": "Output format; JSON and YAML include change IDs and results for each sandbox.",
+        "choices": [
+          "table",
+          "yaml",
+          "json"
+        ],
+        "requires": [],
+        "conflicts": []
+      }
+    ]
+  },
+  {
+    "command": [
+      "provider",
+      "delete"
+    ],
+    "help": "Delete providers by name.",
+    "fields": [
+      {
+        "key": "names",
+        "flag": "",
+        "type": "string",
+        "repeat": true,
+        "last": false,
+        "required": true,
+        "default": null,
+        "help": "Provider names.",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      }
+    ]
+  },
+  {
+    "command": [
+      "profile",
+      "list"
+    ],
+    "help": "List available profiles.",
+    "fields": [
+      {
+        "key": "profile_type",
+        "flag": "--type",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "Filter profiles by type.",
+        "choices": [
+          "provider"
+        ],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "output",
+        "flag": "--output",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": "OutputFormat::Table",
+        "help": "Output format.",
+        "choices": [
+          "table",
+          "yaml",
+          "json"
+        ],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "global",
+        "flag": "--global",
+        "type": "bool",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "List platform-scoped profiles (ignores --workspace).",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      }
+    ]
+  },
+  {
+    "command": [
+      "profile",
+      "describe"
+    ],
+    "help": "Describe a profile's credentials, endpoints, and policy defaults.",
+    "fields": [
+      {
+        "key": "id",
+        "flag": "",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": true,
+        "default": null,
+        "help": "Profile id.",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "output",
+        "flag": "--output",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": "OutputFormat::Table",
+        "help": "Output format.",
+        "choices": [
+          "table",
+          "yaml",
+          "json"
+        ],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "global",
+        "flag": "--global",
+        "type": "bool",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "Describe a platform-scoped profile (ignores --workspace).",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      }
+    ]
+  },
+  {
+    "command": [
+      "profile",
+      "export"
+    ],
+    "help": "Export a provider profile.",
+    "fields": [
+      {
+        "key": "id",
+        "flag": "",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": true,
+        "default": null,
+        "help": "Provider profile id.",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "output",
+        "flag": "--output",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": "OutputFormat::Yaml",
+        "help": "Output format.",
+        "choices": [
+          "table",
+          "yaml",
+          "json"
+        ],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "global",
+        "flag": "--global",
+        "type": "bool",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "Target platform-scoped profiles (ignores --workspace).",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      }
+    ]
+  },
+  {
+    "command": [
+      "profile",
+      "import"
+    ],
+    "help": "Import provider profiles from a file, directory, or HTTP URL.",
+    "fields": [
+      {
+        "key": "file",
+        "flag": "--file",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "Profile file to import.",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "from",
+        "flag": "--from",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "Directory containing profile files to import.",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "url",
+        "flag": "--url",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "HTTP or HTTPS URL of one YAML or JSON profile.",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "global",
+        "flag": "--global",
+        "type": "bool",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "Import as platform-scoped profiles (ignores --workspace).",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      }
+    ]
+  },
+  {
+    "command": [
+      "profile",
+      "update"
+    ],
+    "help": "Update an existing custom provider profile from a file.",
+    "fields": [
+      {
+        "key": "id",
+        "flag": "",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": true,
+        "default": null,
+        "help": "Existing provider profile id to update.",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "file",
+        "flag": "--file",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": true,
+        "default": null,
+        "help": "Profile file to update.",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "global",
+        "flag": "--global",
+        "type": "bool",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "Target platform-scoped profile (ignores --workspace).",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      }
+    ]
+  },
+  {
+    "command": [
+      "profile",
+      "lint"
+    ],
+    "help": "Validate provider profile files without registering them.",
+    "fields": [
+      {
+        "key": "file",
+        "flag": "--file",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "Profile file to lint.",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "from",
+        "flag": "--from",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "Directory containing profile files to lint.",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "url",
+        "flag": "--url",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "HTTP or HTTPS URL of one YAML or JSON profile.",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "global",
+        "flag": "--global",
+        "type": "bool",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "Lint against platform scope (ignores --workspace).",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      }
+    ]
+  },
+  {
+    "command": [
+      "profile",
+      "delete"
+    ],
+    "help": "Delete a custom provider profile.",
+    "fields": [
+      {
+        "key": "ids",
+        "flag": "",
+        "type": "string",
+        "repeat": true,
+        "last": false,
+        "required": true,
+        "default": null,
+        "help": "Provider profile id(s).",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "global",
+        "flag": "--global",
+        "type": "bool",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "Target platform-scoped profile (ignores --workspace).",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      }
+    ]
+  },
+  {
+    "command": [
+      "workspace",
+      "create"
+    ],
+    "help": "Create a workspace.",
+    "fields": [
+      {
+        "key": "name",
+        "flag": "--name",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": true,
+        "default": null,
+        "help": "Workspace name (DNS-1123 label: lowercase alphanumeric and hyphens, max 19 chars).",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "labels",
+        "flag": "--label",
+        "type": "string",
+        "repeat": true,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "Labels to attach to the workspace (KEY=VALUE).",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      }
+    ]
+  },
+  {
+    "command": [
+      "workspace",
+      "get"
+    ],
+    "help": "Fetch a workspace by name.",
+    "fields": [
+      {
+        "key": "name",
+        "flag": "",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": true,
+        "default": null,
+        "help": "Workspace name.",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      }
+    ]
+  },
+  {
+    "command": [
+      "workspace",
+      "list"
+    ],
+    "help": "List workspaces.",
+    "fields": [
+      {
+        "key": "page_size",
+        "flag": "--page-size",
+        "type": "number",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": "100",
+        "help": "Maximum number of workspaces to return in this page.",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "page_token",
+        "flag": "--page-token",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": "",
+        "help": "Opaque continuation token from a previous page.",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "label_selector",
+        "flag": "--label-selector",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "Filter by label selector (e.g. \"env=staging\").",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "output",
+        "flag": "--output",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": "OutputFormat::Table",
+        "help": "Output format.",
+        "choices": [
+          "table",
+          "yaml",
+          "json"
+        ],
+        "requires": [],
+        "conflicts": []
+      }
+    ]
+  },
+  {
+    "command": [
+      "workspace",
+      "delete"
+    ],
+    "help": "Delete a workspace.",
+    "fields": [
+      {
+        "key": "names",
+        "flag": "",
+        "type": "string",
+        "repeat": true,
+        "last": false,
+        "required": true,
+        "default": null,
+        "help": "Workspace name(s) to delete.",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      }
+    ]
+  },
+  {
+    "command": [
+      "workspace",
+      "member",
+      "add"
+    ],
+    "help": "Add a member to a workspace.",
+    "fields": [
+      {
+        "key": "workspace",
+        "flag": "--workspace",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": true,
+        "default": null,
+        "help": "Workspace name.",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "subject",
+        "flag": "--subject",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": true,
+        "default": null,
+        "help": "OIDC subject claim identifying the principal.",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "role",
+        "flag": "--role",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": true,
+        "default": null,
+        "help": "Role to assign (user or admin).",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      }
+    ]
+  },
+  {
+    "command": [
+      "workspace",
+      "member",
+      "remove"
+    ],
+    "help": "Remove a member from a workspace.",
+    "fields": [
+      {
+        "key": "workspace",
+        "flag": "--workspace",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": true,
+        "default": null,
+        "help": "Workspace name.",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "subject",
+        "flag": "--subject",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": true,
+        "default": null,
+        "help": "OIDC subject claim identifying the principal.",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      }
+    ]
+  },
+  {
+    "command": [
+      "workspace",
+      "member",
+      "list"
+    ],
+    "help": "List members of a workspace.",
+    "fields": [
+      {
+        "key": "workspace",
+        "flag": "--workspace",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": true,
+        "default": null,
+        "help": "Workspace name.",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "page_size",
+        "flag": "--page-size",
+        "type": "number",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": "100",
+        "help": "Maximum number of members to return in this page.",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "page_token",
+        "flag": "--page-token",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": "",
+        "help": "Opaque continuation token from a previous page.",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "output",
+        "flag": "--output",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": "OutputFormat::Table",
+        "help": "Output format.",
+        "choices": [
+          "table",
+          "yaml",
+          "json"
+        ],
+        "requires": [],
+        "conflicts": []
+      }
+    ]
+  },
+  {
+    "command": [
+      "gateway",
+      "add"
+    ],
+    "help": "Add an existing gateway.  Registers a gateway endpoint so it appears in `openshell gateway select`.  An `http://...` endpoint is treated as a direct plaintext gateway and skips both mTLS client certificate lookup and browser authentication.  Without extra flags, an `https://...` endpoint is treated as an edge-authenticated (cloud) gateway and a browser is opened for authentication.  Pass `--remote <ssh-dest>` to register a remote mTLS gateway. Pass `--local` to register a local mTLS gateway. In both cases, mTLS certificates must already exist in the gateway config directory.  An `ssh://` endpoint (e.g., `ssh://user@host:8080`) is shorthand for `--remote user@host` with the endpoint derived from the URL.",
+    "fields": [
+      {
+        "key": "endpoint",
+        "flag": "",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": true,
+        "default": null,
+        "help": "Gateway endpoint URL (for example `http://127.0.0.1:8080`, `https://10.0.0.5:8080`, or `ssh://user@host:8080`).",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "name",
+        "flag": "--name",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "Gateway name (auto-derived from the endpoint hostname when omitted).",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      },
+      {
+        "key": "remote",
+        "flag": "--remote",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "Register a remote mTLS gateway accessible via SSH. With `http://...`, stores a remote plaintext registration instead.",
+        "choices": [],
+        "requires": [],
+        "conflicts": [
+          "local"
+        ]
+      },
+      {
+        "key": "local",
+        "flag": "--local",
+        "type": "bool",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "Register a local mTLS gateway running in Docker on this machine. With `http://...`, stores a local plaintext registration instead.",
+        "choices": [],
+        "requires": [],
+        "conflicts": [
+          "remote"
+        ]
+      },
+      {
+        "key": "oidc_issuer",
+        "flag": "--oidc-issuer",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "Register as an OIDC-authenticated gateway using the given issuer URL. The server must be configured with `--oidc-issuer` matching this URL.",
+        "choices": [],
+        "requires": [],
+        "conflicts": [
+          "remote"
+        ]
+      },
+      {
+        "key": "oidc_client_id",
+        "flag": "--oidc-client-id",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": "openshell-cli",
+        "help": "OIDC client ID for the CLI login flow (defaults to \"openshell-cli\").",
+        "choices": [],
+        "requires": [
+          "oidc_issuer"
+        ],
+        "conflicts": []
+      },
+      {
+        "key": "oidc_audience",
+        "flag": "--oidc-audience",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "OIDC audience for the API resource server. When different from the client ID, the CLI requests this audience in the token exchange. Defaults to the client ID value.",
+        "choices": [],
+        "requires": [
+          "oidc_issuer"
+        ],
+        "conflicts": []
+      },
+      {
+        "key": "oidc_scopes",
+        "flag": "--oidc-scopes",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "Space-separated `OAuth2` scopes to request during OIDC login. When set, tokens will include these scopes for fine-grained access control.",
+        "choices": [],
+        "requires": [
+          "oidc_issuer"
+        ],
+        "conflicts": []
+      }
+    ]
+  },
+  {
+    "command": [
+      "gateway",
+      "remove"
+    ],
+    "help": "Remove a local gateway registration.  This only removes CLI metadata and stored auth tokens. It does not stop or destroy the gateway service.",
+    "fields": [
+      {
+        "key": "name",
+        "flag": "",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "Gateway name (defaults to active gateway).",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      }
+    ]
+  },
+  {
+    "command": [
+      "gateway",
+      "login"
+    ],
+    "help": "Authenticate with an edge-authenticated or OIDC gateway.  Opens a browser for the edge proxy's login flow and stores the token locally. After `gateway logout`, OIDC browser login requests a fresh identity-provider prompt so you can switch users.",
+    "fields": [
+      {
+        "key": "name",
+        "flag": "",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "Gateway name (defaults to the active gateway).",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      }
+    ]
+  },
+  {
+    "command": [
+      "gateway",
+      "logout"
+    ],
+    "help": "Clear stored authentication credentials for a gateway.  Removes the locally stored OIDC token or edge token so subsequent commands require re-authentication via `gateway login`. For OIDC gateways, the next browser login asks the identity provider for a fresh login instead of silently reusing an existing browser session.",
+    "fields": [
+      {
+        "key": "name",
+        "flag": "",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "Gateway name (defaults to the active gateway).",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      }
+    ]
+  },
+  {
+    "command": [
+      "gateway",
+      "select"
+    ],
+    "help": "Select the active gateway.  When called without a name, opens an interactive chooser on a TTY and lists available gateways in non-interactive mode.",
+    "fields": [
+      {
+        "key": "name",
+        "flag": "",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": null,
+        "help": "Gateway name (omit to choose interactively or list in non-interactive mode).",
+        "choices": [],
+        "requires": [],
+        "conflicts": []
+      }
+    ]
+  },
+  {
+    "command": [
+      "gateway",
+      "info"
+    ],
+    "help": "Show elevated live gateway runtime information.",
+    "fields": [
+      {
+        "key": "output",
+        "flag": "--output",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": "OutputFormat::Table",
+        "help": "Output format.",
+        "choices": [
+          "table",
+          "yaml",
+          "json"
+        ],
+        "requires": [],
+        "conflicts": []
+      }
+    ]
+  },
+  {
+    "command": [
+      "gateway",
+      "list"
+    ],
+    "help": "List registered gateways.  Prints all registered gateways with their endpoint, type, authentication mode, source, and remote registration details. The active gateway is marked with `*`.",
+    "fields": [
+      {
+        "key": "output",
+        "flag": "--output",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": "OutputFormat::Table",
+        "help": "Output format.",
+        "choices": [
+          "table",
+          "yaml",
+          "json"
+        ],
+        "requires": [],
+        "conflicts": []
+      }
+    ]
+  },
+  {
+    "command": [
+      "status"
+    ],
+    "help": "Show gateway status and information.",
+    "fields": [
+      {
+        "key": "output",
+        "flag": "--output",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": "OutputFormat::Table",
+        "help": "Output format.",
+        "choices": [
+          "table",
+          "yaml",
+          "json"
+        ],
+        "requires": [],
+        "conflicts": []
+      }
+    ]
+  },
+  {
+    "command": [
+      "whoami"
+    ],
+    "help": "Show the identity validated by the gateway.",
+    "fields": [
+      {
+        "key": "output",
+        "flag": "--output",
+        "type": "string",
+        "repeat": false,
+        "last": false,
+        "required": false,
+        "default": "OutputFormat::Table",
+        "help": "Output format.",
+        "choices": [
+          "table",
+          "yaml",
+          "json"
+        ],
+        "requires": [],
+        "conflicts": []
+      }
+    ]
+  },
+  {
+    "command": [
+      "doctor",
+      "check"
+    ],
+    "help": "Validate system prerequisites for running a gateway.  Checks that a Docker-compatible runtime is installed, running, and reachable. Reports version info and socket path.  Examples: openshell doctor check",
+    "fields": []
+  }
+]

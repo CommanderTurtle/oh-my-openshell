@@ -1,0 +1,41 @@
+<!doctype html>
+<!-- SPDX-FileCopyrightText: 2026 CommanderTurtle
+     SPDX-License-Identifier: AGPL-3.0-only -->
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="dark"><title>omosh</title>
+  <link rel="icon" href="/assets/icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/assets/style.css"><link rel="stylesheet" href="/assets/structured.css"><link rel="stylesheet" href="/assets/vendor/xterm.css">
+  <script type="module" src="/assets/app.js"></script>
+</head>
+<body>
+  <aside class="sidebar">
+    <a class="brand" href="#overview"><img src="/assets/icon.svg" width="32" height="32" alt=""><span>omosh<small>OH MY OPENSHELL</small></span></a>
+    <div class="instance"><span class="status-dot"></span><div>Local instance<small id="instance-version">OpenShell v0.1.6</small></div><span class="local-tag">01</span></div>
+    <div class="nav-label">WORKSPACE</div>
+    <nav aria-label="Main navigation">
+      <a href="#overview" data-view="overview"><span>◫</span> Overview</a>
+      <a href="#environments" data-view="environments"><span>▦</span> Environments <i id="env-count">0</i></a>
+      <a href="#sessions" data-view="sessions"><span>⌘</span> Sessions <i id="session-count">0</i></a>
+      <a href="#configuration" data-view="configuration"><span>≡</span> Configuration</a>
+      <a href="#bridge" data-view="bridge"><span>⇄</span> Agent bridge</a>
+    </nav>
+    <div class="nav-label">OPERATOR</div>
+    <nav aria-label="Operator navigation">
+      <a href="#manual" data-view="manual"><span>▤</span> Reference</a>
+      <a href="#cli" data-view="cli"><span>›_</span> OpenShell CLI</a>
+      <a href="#updates" data-view="updates"><span>↓</span> Versions</a>
+      <a href="#activity" data-view="activity"><span>◷</span> Activity</a>
+    </nav>
+    <div class="sidebar-bottom"><span class="status-dot"></span> Localhost only<small>Settings stay on this machine.</small></div>
+  </aside>
+  <div class="workspace">
+    <header class="topbar"><span><span class="muted">Workspace</span><span class="slash">/</span><span id="breadcrumb">Overview</span></span><div><span id="gateway-badge" class="badge">Unchecked</span><button id="refresh" class="quiet" title="Refresh gateway status">↻ <span>Refresh</span></button></div></header>
+    <main id="main" tabindex="-1"></main>
+    <footer><span>omosh <span class="muted">/</span> 0.1.0 · <a href="/license" target="_blank" rel="noopener">AGPL-3.0</a> · <a href="/source.tar.gz">Source</a></span><span id="footer-state">Local OpenShell management</span></footer>
+  </div>
+  <dialog id="auth-dialog"><form id="auth-form"><span class="eyebrow">OPERATOR ACCESS</span><h2>Open your instance</h2><p>Use the private operator link printed by <code>omosh</code>, or enter the key from its state directory.</p><label>Operator key<input name="key" type="password" autocomplete="off" required></label><p id="auth-error" class="error" role="alert"></p><button class="primary">Connect</button></form></dialog>
+  <dialog id="form-dialog"></dialog>
+  <div id="toast" role="status" hidden></div>
+</body></html>

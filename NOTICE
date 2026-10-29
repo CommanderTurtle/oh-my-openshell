@@ -1,0 +1,20 @@
+omosh
+Copyright (c) 2026 CommanderTurtle
+omosh source is licensed under the GNU Affero General Public License,
+version 3 (AGPL-3.0-only). See LICENSE.
+
+Includes NVIDIA OpenShell documentation, diagrams, and generated declaration
+indexes derived from NVIDIA/OpenShell v0.1.6, commit
+ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47.
+Copyright (c) 2025-2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+Licensed under Apache-2.0; the upstream license and source notices are retained
+under src/omosh/reference/.
+
+OpenShell is a separate runtime supplied by NVIDIA. omosh is an independent
+operator interface and is not an NVIDIA product.
+
+Browser dependencies:
+- @xterm/xterm and @xterm/addon-fit: MIT
+- marked: MIT
+- DOMPurify: Apache-2.0 OR MPL-2.0
+The build copies their respective licenses alongside the local browser bundle.

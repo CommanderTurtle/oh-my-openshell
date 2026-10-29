@@ -1,0 +1,3272 @@
+[
+  {
+    "path": "openshell.gateway.auth.allow_unauthenticated_users",
+    "type": "bool",
+    "file": false,
+    "optional": false,
+    "choices": [],
+    "help": "When true, unauthenticated user/CLI calls are accepted as a local developer principal. This is an unsafe local-development escape hatch for trusted, non-shared gateways. Sandbox supervisor calls still use gateway-minted sandbox JWTs.",
+    "structure": {
+      "type": "boolean"
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-core/src/config.rs",
+    "example": false,
+    "manual": "how-it-works/gateways/configuration"
+  },
+  {
+    "path": "openshell.gateway.bind_address",
+    "type": "string",
+    "file": false,
+    "optional": true,
+    "choices": [],
+    "help": "",
+    "structure": {
+      "type": "string",
+      "optional": true
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-server/src/config_file.rs",
+    "example": "0.0.0.0:8080",
+    "manual": "how-it-works/gateways/configuration"
+  },
+  {
+    "path": "openshell.gateway.compute_driver",
+    "type": "string",
+    "file": false,
+    "optional": true,
+    "choices": [],
+    "help": "Explicit compute driver selection. `None` enables auto-detection.",
+    "structure": {
+      "type": "string",
+      "optional": true
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-server/src/config_file.rs",
+    "example": "example-compute",
+    "manual": "how-it-works/gateways/configuration"
+  },
+  {
+    "path": "openshell.gateway.config_delivery_mode",
+    "type": "string",
+    "file": false,
+    "optional": true,
+    "choices": [
+      "poll",
+      "push"
+    ],
+    "help": "Supervisor configuration delivery; omitted uses the release default.",
+    "structure": {
+      "type": "string",
+      "choices": [
+        "poll",
+        "push"
+      ],
+      "optional": true
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-server/src/config_file.rs",
+    "example": "poll",
+    "manual": "how-it-works/gateways/configuration"
+  },
+  {
+    "path": "openshell.gateway.credential_drivers",
+    "type": "json",
+    "file": false,
+    "optional": true,
+    "choices": [],
+    "help": "",
+    "structure": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "optional": true
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-server/src/config_file.rs",
+    "example": [
+      "kubernetes-secrets"
+    ],
+    "manual": "how-it-works/gateways/configuration"
+  },
+  {
+    "path": "openshell.gateway.credential_storage",
+    "type": "json",
+    "file": false,
+    "optional": true,
+    "choices": [],
+    "help": "",
+    "structure": {
+      "type": "object",
+      "optional": true
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-server/src/config_file.rs",
+    "manual": "how-it-works/gateways/configuration"
+  },
+  {
+    "path": "openshell.gateway.database_lock_max_connections",
+    "type": "number",
+    "file": false,
+    "optional": true,
+    "choices": [],
+    "help": "Connection ceiling for the Postgres mutation lock pool. Each mutation guard holds one lock connection, so this bounds how many guarded mutations a replica runs or waits on in Postgres at once. Omit to keep the default of 4; `SQLite` has no lock pool and ignores it.",
+    "structure": {
+      "type": "integer",
+      "minimum": 0,
+      "optional": true
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-server/src/config_file.rs",
+    "example": 4,
+    "manual": "how-it-works/gateways/configuration"
+  },
+  {
+    "path": "openshell.gateway.database_max_connections",
+    "type": "number",
+    "file": false,
+    "optional": true,
+    "choices": [],
+    "help": "Connection ceiling for the persistence pool. One shared pool serves every database-backed RPC, so this is also the gateway's ceiling on concurrent database work. On Postgres, each replica also opens up to `database_lock_max_connections` lock connections, so total server connections are `(database_max_connections + database_lock_max_connections) × replica_count`, plus rollout pods, which must stay under the server's own `max_connections`. Omit to keep the backend default (10 for Postgres, 5 for on-disk `SQLite`); an in-memory `SQLite` database is always a single connection. Postgres needs at least 2, because the SSH identity lock keeps one connection while it queries the pool.",
+    "structure": {
+      "type": "integer",
+      "minimum": 0,
+      "optional": true
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-server/src/config_file.rs",
+    "example": 10,
+    "manual": "how-it-works/gateways/configuration"
+  },
+  {
+    "path": "openshell.gateway.default_credential_driver",
+    "type": "string",
+    "file": false,
+    "optional": true,
+    "choices": [],
+    "help": "",
+    "structure": {
+      "type": "string",
+      "optional": true
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-server/src/config_file.rs",
+    "manual": "how-it-works/gateways/configuration"
+  },
+  {
+    "path": "openshell.gateway.disable_tls",
+    "type": "bool",
+    "file": false,
+    "optional": true,
+    "choices": [],
+    "help": "When `true`, the gateway listens on plaintext HTTP and ignores any `[openshell.gateway.tls]` table. Mirrors `--disable-tls`.",
+    "structure": {
+      "type": "boolean",
+      "optional": true
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-server/src/config_file.rs",
+    "example": false,
+    "manual": "how-it-works/gateways/configuration"
+  },
+  {
+    "path": "openshell.gateway.enable_loopback_service_http",
+    "type": "bool",
+    "file": false,
+    "optional": true,
+    "choices": [],
+    "help": "Enable plaintext HTTP routing for loopback sandbox service URLs.",
+    "structure": {
+      "type": "boolean",
+      "optional": true
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-server/src/config_file.rs",
+    "example": true,
+    "manual": "how-it-works/gateways/configuration"
+  },
+  {
+    "path": "openshell.gateway.enable_websocket_tunnel",
+    "type": "bool",
+    "file": false,
+    "optional": true,
+    "choices": [],
+    "help": "Enable the WebSocket tunnel for an authenticated edge proxy.",
+    "structure": {
+      "type": "boolean",
+      "optional": true
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-server/src/config_file.rs",
+    "example": false,
+    "manual": "how-it-works/gateways/configuration"
+  },
+  {
+    "path": "openshell.gateway.gateway_jwt.gateway_id",
+    "type": "string",
+    "file": false,
+    "optional": false,
+    "choices": [],
+    "help": "Stable gateway identity embedded in `iss`/`aud`. Defaults to `openshell`.",
+    "structure": {
+      "type": "string"
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-core/src/config.rs",
+    "example": "openshell",
+    "manual": "how-it-works/gateways/configuration"
+  },
+  {
+    "path": "openshell.gateway.gateway_jwt.kid_path",
+    "type": "string",
+    "file": true,
+    "optional": false,
+    "choices": [],
+    "help": "Path to the `kid` value (plain text, one line).",
+    "structure": {
+      "type": "string"
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-core/src/config.rs",
+    "example": "/etc/openshell/jwt/kid",
+    "manual": "how-it-works/gateways/configuration"
+  },
+  {
+    "path": "openshell.gateway.gateway_jwt.public_key_path",
+    "type": "string",
+    "file": true,
+    "optional": false,
+    "choices": [],
+    "help": "Path to the matching public key (SPKI PEM).",
+    "structure": {
+      "type": "string"
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-core/src/config.rs",
+    "example": "/etc/openshell/jwt/public.pem",
+    "manual": "how-it-works/gateways/configuration"
+  },
+  {
+    "path": "openshell.gateway.gateway_jwt.signing_key_path",
+    "type": "string",
+    "file": true,
+    "optional": false,
+    "choices": [],
+    "help": "Path to the Ed25519 signing key (PKCS#8 PEM).",
+    "structure": {
+      "type": "string"
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-core/src/config.rs",
+    "example": "/etc/openshell/jwt/signing.pem",
+    "manual": "how-it-works/gateways/configuration"
+  },
+  {
+    "path": "openshell.gateway.gateway_jwt.ttl_secs",
+    "type": "number",
+    "file": false,
+    "optional": true,
+    "choices": [],
+    "help": "Token lifetime in seconds. Omission selects non-expiring sandbox session credentials and the default lifetime for extension tokens. Explicit zero is invalid.",
+    "structure": {
+      "type": "integer",
+      "minimum": 1,
+      "optional": true
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-core/src/config.rs",
+    "example": 3600,
+    "manual": "how-it-works/gateways/configuration"
+  },
+  {
+    "path": "openshell.gateway.grpc_rate_limit_requests",
+    "type": "number",
+    "file": false,
+    "optional": true,
+    "choices": [],
+    "help": "",
+    "structure": {
+      "type": "integer",
+      "minimum": 0,
+      "optional": true
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-server/src/config_file.rs",
+    "example": 120,
+    "manual": "how-it-works/gateways/configuration"
+  },
+  {
+    "path": "openshell.gateway.grpc_rate_limit_window_seconds",
+    "type": "number",
+    "file": false,
+    "optional": true,
+    "choices": [],
+    "help": "",
+    "structure": {
+      "type": "integer",
+      "minimum": 0,
+      "optional": true
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-server/src/config_file.rs",
+    "example": 60,
+    "manual": "how-it-works/gateways/configuration"
+  },
+  {
+    "path": "openshell.gateway.guest_tls_ca",
+    "type": "string",
+    "file": true,
+    "optional": true,
+    "choices": [],
+    "help": "",
+    "structure": {
+      "type": "string",
+      "optional": true
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-server/src/config_file.rs",
+    "example": "/etc/openshell/certs/ca.pem",
+    "manual": "how-it-works/gateways/configuration"
+  },
+  {
+    "path": "openshell.gateway.health_bind_address",
+    "type": "string",
+    "file": false,
+    "optional": true,
+    "choices": [],
+    "help": "",
+    "structure": {
+      "type": "string",
+      "optional": true
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-server/src/config_file.rs",
+    "example": "0.0.0.0:8081",
+    "manual": "how-it-works/gateways/configuration"
+  },
+  {
+    "path": "openshell.gateway.image_preparation_timeout_seconds",
+    "type": "number",
+    "file": false,
+    "optional": true,
+    "choices": [],
+    "help": "Absolute preparation budget for new attempts; existing deadlines persist.",
+    "structure": {
+      "type": "integer",
+      "minimum": 0,
+      "optional": true
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-server/src/config_file.rs",
+    "example": 1800,
+    "manual": "how-it-works/gateways/configuration"
+  },
+  {
+    "path": "openshell.gateway.interceptors",
+    "type": "json",
+    "file": false,
+    "optional": false,
+    "choices": [],
+    "help": "",
+    "structure": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "help": "Operator-assigned instance name used in logs and config overrides.",
+            "required": true
+          },
+          "grpc_endpoint": {
+            "type": "string",
+            "help": "Interceptor gRPC endpoint. Supports `http://`, `https://`, and `unix://` endpoints.",
+            "required": true
+          },
+          "tls_ca_cert_path": {
+            "type": "string",
+            "optional": true,
+            "help": "Optional PEM trust-root bundle for an HTTPS endpoint. The gateway loads this file during interceptor initialization.",
+            "required": false
+          },
+          "audience": {
+            "type": "string",
+            "optional": true,
+            "help": "Exact JWT audience for this service. When omitted, a kind-scoped value is derived from the configured registration name.",
+            "required": false
+          },
+          "allow_insecure_transport": {
+            "type": "boolean",
+            "help": "Opt out of extension authentication for this interceptor, permitting a plaintext `http://` endpoint with no bearer credential. Development and trusted-network deployments only.",
+            "required": false
+          },
+          "order": {
+            "type": "integer",
+            "help": "Deterministic service ordering. Lower values run first.",
+            "required": false
+          },
+          "failure_policy": {
+            "type": "string",
+            "choices": [
+              "fail_closed",
+              "fail_open"
+            ],
+            "optional": true,
+            "help": "Default failure policy for this configured service.",
+            "required": false
+          },
+          "timeout": {
+            "type": "string",
+            "optional": true,
+            "help": "RFC-style timeout string such as `500ms` or `2s`.",
+            "required": false
+          },
+          "max_response_bytes": {
+            "type": "integer",
+            "minimum": 0,
+            "optional": true,
+            "help": "Maximum accepted encoded `Evaluate` response size.",
+            "required": false
+          },
+          "max_patches": {
+            "type": "integer",
+            "minimum": 0,
+            "optional": true,
+            "help": "Maximum JSON patches accepted from one evaluation result.",
+            "required": false
+          },
+          "binding_policy": {
+            "type": "string",
+            "choices": [
+              "dynamic",
+              "allowlist",
+              "exact"
+            ],
+            "help": "Controls whether manifest bindings are dynamic, allowlisted, or must exactly match operator configuration.",
+            "required": false
+          },
+          "bindings": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "optional": true,
+                  "help": "Binding id from the interceptor manifest.",
+                  "required": false
+                },
+                "rpc": {
+                  "type": "string",
+                  "optional": true,
+                  "help": "Full selector form: `openshell.v1.OpenShell/CreateSandbox`.",
+                  "required": false
+                },
+                "service": {
+                  "type": "string",
+                  "optional": true,
+                  "help": "Structured selector service, e.g. `openshell.v1.OpenShell`.",
+                  "required": false
+                },
+                "method": {
+                  "type": "string",
+                  "optional": true,
+                  "help": "Structured selector method, e.g. `CreateSandbox`.",
+                  "required": false
+                },
+                "phases": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "choices": [
+                      "modify_operation",
+                      "validate",
+                      "post_commit"
+                    ]
+                  },
+                  "optional": true,
+                  "help": "Narrowed phase set.",
+                  "required": false
+                },
+                "disabled": {
+                  "type": "boolean",
+                  "help": "Disable the selected binding.",
+                  "required": false
+                },
+                "failure_policy": {
+                  "type": "string",
+                  "choices": [
+                    "fail_closed",
+                    "fail_open"
+                  ],
+                  "optional": true,
+                  "help": "Binding-specific failure policy override.",
+                  "required": false
+                }
+              }
+            },
+            "help": "Binding configuration. Its validation and authorization semantics are selected by `binding_policy`.",
+            "required": false
+          }
+        }
+      }
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-server/src/config_file.rs",
+    "example": [
+      {
+        "name": "policy-governance",
+        "grpc_endpoint": "https://governance.example:18081",
+        "tls_ca_cert_path": "/path/to/governance-ca.pem",
+        "audience": "urn:example:governance",
+        "order": 10,
+        "failure_policy": "fail_closed",
+        "binding_policy": "allowlist",
+        "timeout": "500ms",
+        "max_response_bytes": 1048576,
+        "max_patches": 32,
+        "bindings": [
+          {
+            "rpc": "openshell.v1.OpenShell/CreateSandbox",
+            "phases": [
+              "modify_operation",
+              "validate"
+            ]
+          },
+          {
+            "rpc": "openshell.v1.OpenShell/UpdateConfig",
+            "phases": [
+              "validate"
+            ]
+          }
+        ]
+      }
+    ],
+    "manual": "extensibility/gateway-interceptors"
+  },
+  {
+    "path": "openshell.gateway.log_level",
+    "type": "string",
+    "file": false,
+    "optional": true,
+    "choices": [],
+    "help": "",
+    "structure": {
+      "type": "string",
+      "optional": true
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-server/src/config_file.rs",
+    "example": "info",
+    "manual": "how-it-works/gateways/configuration"
+  },
+  {
+    "path": "openshell.gateway.metrics_bind_address",
+    "type": "string",
+    "file": false,
+    "optional": true,
+    "choices": [],
+    "help": "",
+    "structure": {
+      "type": "string",
+      "optional": true
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-server/src/config_file.rs",
+    "example": "0.0.0.0:9090",
+    "manual": "how-it-works/gateways/configuration"
+  },
+  {
+    "path": "openshell.gateway.mtls_auth.enabled",
+    "type": "bool",
+    "file": false,
+    "optional": false,
+    "choices": [],
+    "help": "When true, the gateway maps a verified TLS client certificate into a user principal. Sandbox and supervisor clients use bearer identity, so this setting is independent of the selected compute driver.",
+    "structure": {
+      "type": "boolean"
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-core/src/config.rs",
+    "example": false,
+    "manual": "how-it-works/gateways/authentication"
+  },
+  {
+    "path": "openshell.gateway.mtls_auth.operator_enabled",
+    "type": "bool",
+    "file": false,
+    "optional": false,
+    "choices": [],
+    "help": "Enable gateway-wide operators authenticated by verified certificates with OU=operator. Independent of ordinary mTLS user authentication; defaults off.",
+    "structure": {
+      "type": "boolean"
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-core/src/config.rs",
+    "example": false,
+    "manual": "how-it-works/gateways/authentication"
+  },
+  {
+    "path": "openshell.gateway.name",
+    "type": "string",
+    "file": false,
+    "optional": true,
+    "choices": [],
+    "help": "Operator-assigned name for this gateway installation.",
+    "structure": {
+      "type": "string",
+      "optional": true
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-server/src/config_file.rs",
+    "example": "production-us-west",
+    "manual": "how-it-works/gateways/configuration"
+  },
+  {
+    "path": "openshell.gateway.ocsf_log.max_files",
+    "type": "number",
+    "file": false,
+    "optional": true,
+    "choices": [],
+    "help": "",
+    "structure": {
+      "type": "integer",
+      "minimum": 1,
+      "optional": true
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-server/src/config_file.rs",
+    "example": 7,
+    "manual": "how-it-works/gateways/configuration"
+  },
+  {
+    "path": "openshell.gateway.ocsf_log.path",
+    "type": "string",
+    "file": true,
+    "optional": false,
+    "choices": [],
+    "help": "",
+    "structure": {
+      "type": "string"
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-server/src/config_file.rs",
+    "example": "/var/log/openshell/gateway-ocsf.jsonl",
+    "manual": "how-it-works/gateways/configuration"
+  },
+  {
+    "path": "openshell.gateway.ocsf_log.queue_capacity",
+    "type": "number",
+    "file": false,
+    "optional": true,
+    "choices": [],
+    "help": "",
+    "structure": {
+      "type": "integer",
+      "minimum": 1,
+      "optional": true
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-server/src/config_file.rs",
+    "example": 10000,
+    "manual": "how-it-works/gateways/configuration"
+  },
+  {
+    "path": "openshell.gateway.ocsf_log.queue_max_bytes",
+    "type": "number",
+    "file": false,
+    "optional": true,
+    "choices": [],
+    "help": "",
+    "structure": {
+      "type": "integer",
+      "minimum": 1,
+      "optional": true
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-server/src/config_file.rs",
+    "example": 16777216,
+    "manual": "how-it-works/gateways/configuration"
+  },
+  {
+    "path": "openshell.gateway.ocsf_log.rotation",
+    "type": "string",
+    "file": false,
+    "optional": false,
+    "choices": [
+      "never",
+      "daily"
+    ],
+    "help": "",
+    "structure": {
+      "type": "string",
+      "choices": [
+        "never",
+        "daily"
+      ]
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-server/src/config_file.rs",
+    "example": "daily",
+    "manual": "how-it-works/gateways/configuration"
+  },
+  {
+    "path": "openshell.gateway.ocsf_log.schema_version",
+    "type": "string",
+    "file": false,
+    "optional": true,
+    "choices": [],
+    "help": "",
+    "structure": {
+      "type": "string",
+      "optional": true
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-server/src/config_file.rs",
+    "example": "1.3",
+    "manual": "how-it-works/gateways/configuration"
+  },
+  {
+    "path": "openshell.gateway.oidc.admin_role",
+    "type": "string",
+    "file": false,
+    "optional": false,
+    "choices": [],
+    "help": "Role name that grants admin access. Defaults to `openshell-admin`.",
+    "structure": {
+      "type": "string"
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-core/src/config.rs",
+    "example": "openshell-admin",
+    "manual": "how-it-works/gateways/authentication"
+  },
+  {
+    "path": "openshell.gateway.oidc.audience",
+    "type": "string",
+    "file": false,
+    "optional": false,
+    "choices": [],
+    "help": "Expected audience (`aud`) claim. Typically the OIDC client ID.",
+    "structure": {
+      "type": "string"
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-core/src/config.rs",
+    "example": "openshell-cli",
+    "manual": "how-it-works/gateways/authentication"
+  },
+  {
+    "path": "openshell.gateway.oidc.dangerously_allow_insecure_http",
+    "type": "bool",
+    "file": false,
+    "optional": false,
+    "choices": [],
+    "help": "Permit cleartext OIDC metadata and JWKS requests to numeric loopback addresses. This is a development-only escape hatch and never permits cleartext requests to hostnames or non-loopback addresses.",
+    "structure": {
+      "type": "boolean"
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-core/src/config.rs",
+    "example": false,
+    "manual": "how-it-works/gateways/authentication"
+  },
+  {
+    "path": "openshell.gateway.oidc.issuer",
+    "type": "string",
+    "file": false,
+    "optional": false,
+    "choices": [],
+    "help": "OIDC issuer URL (e.g., `https://idp.example.com/realms/openshell`).",
+    "structure": {
+      "type": "string"
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-core/src/config.rs",
+    "example": "https://idp.example.com/realms/openshell",
+    "manual": "how-it-works/gateways/authentication"
+  },
+  {
+    "path": "openshell.gateway.oidc.jwks_allowed_origins",
+    "type": "json",
+    "file": false,
+    "optional": false,
+    "choices": [],
+    "help": "Additional origins from which JWKS may be loaded. Entries must be origins such as `https://www.googleapis.com`, without a path, query, credentials, or fragment. The issuer origin is always allowed.",
+    "structure": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-core/src/config.rs",
+    "example": [
+      "https://keys.example.com"
+    ],
+    "manual": "how-it-works/gateways/authentication"
+  },
+  {
+    "path": "openshell.gateway.oidc.jwks_ttl_secs",
+    "type": "number",
+    "file": false,
+    "optional": false,
+    "choices": [],
+    "help": "JWKS cache TTL in seconds. Defaults to 3600 (1 hour).",
+    "structure": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-core/src/config.rs",
+    "example": 3600,
+    "manual": "how-it-works/gateways/authentication"
+  },
+  {
+    "path": "openshell.gateway.oidc.roles_claim",
+    "type": "string",
+    "file": false,
+    "optional": false,
+    "choices": [],
+    "help": "Dot-separated path to the roles array in the JWT claims. Defaults to `realm_access.roles` (Keycloak). Examples: `roles` (Entra ID), `groups` (Okta), `custom.path.roles`.",
+    "structure": {
+      "type": "string"
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-core/src/config.rs",
+    "example": "realm_access.roles",
+    "manual": "how-it-works/gateways/authentication"
+  },
+  {
+    "path": "openshell.gateway.oidc.scopes_claim",
+    "type": "string",
+    "file": false,
+    "optional": false,
+    "choices": [],
+    "help": "Dot-separated path to the scopes value in the JWT claims. When non-empty, the server enforces scope-based permissions on top of roles. Keycloak: `scope` (space-delimited string). Okta: `scp` (JSON array).",
+    "structure": {
+      "type": "string"
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-core/src/config.rs",
+    "example": "",
+    "manual": "how-it-works/gateways/authentication"
+  },
+  {
+    "path": "openshell.gateway.oidc.user_role",
+    "type": "string",
+    "file": false,
+    "optional": false,
+    "choices": [],
+    "help": "Role name that grants standard user access. Defaults to `openshell-user`.",
+    "structure": {
+      "type": "string"
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-core/src/config.rs",
+    "example": "openshell-user",
+    "manual": "how-it-works/gateways/authentication"
+  },
+  {
+    "path": "openshell.gateway.otlp.endpoint",
+    "type": "string",
+    "file": false,
+    "optional": true,
+    "choices": [],
+    "help": "",
+    "structure": {
+      "type": "string",
+      "optional": true
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-server/src/config_file.rs",
+    "example": "http://otel-collector.observability.svc:4317",
+    "manual": "how-it-works/gateways/configuration"
+  },
+  {
+    "path": "openshell.gateway.otlp.ocsf.enabled",
+    "type": "bool",
+    "file": false,
+    "optional": false,
+    "choices": [],
+    "help": "",
+    "structure": {
+      "type": "boolean"
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-server/src/config_file.rs",
+    "example": true,
+    "manual": "how-it-works/gateways/configuration"
+  },
+  {
+    "path": "openshell.gateway.otlp.ocsf.endpoint",
+    "type": "string",
+    "file": false,
+    "optional": true,
+    "choices": [],
+    "help": "",
+    "structure": {
+      "type": "string",
+      "optional": true
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-server/src/config_file.rs",
+    "example": "http://siem-collector.security.svc:4317",
+    "manual": "how-it-works/gateways/configuration"
+  },
+  {
+    "path": "openshell.gateway.otlp.ocsf.schema_version",
+    "type": "string",
+    "file": false,
+    "optional": true,
+    "choices": [],
+    "help": "",
+    "structure": {
+      "type": "string",
+      "optional": true
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-server/src/config_file.rs",
+    "example": "1.3",
+    "manual": "how-it-works/gateways/configuration"
+  },
+  {
+    "path": "openshell.gateway.otlp.service_name",
+    "type": "string",
+    "file": false,
+    "optional": true,
+    "choices": [],
+    "help": "",
+    "structure": {
+      "type": "string",
+      "optional": true
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-server/src/config_file.rs",
+    "example": "openshell-gateway",
+    "manual": "how-it-works/gateways/configuration"
+  },
+  {
+    "path": "openshell.gateway.otlp.traces.endpoint",
+    "type": "string",
+    "file": false,
+    "optional": true,
+    "choices": [],
+    "help": "",
+    "structure": {
+      "type": "string",
+      "optional": true
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-server/src/config_file.rs",
+    "example": "http://traces.observability.svc:4317",
+    "manual": "how-it-works/gateways/configuration"
+  },
+  {
+    "path": "openshell.gateway.policy_validation_failure_mode",
+    "type": "string",
+    "file": false,
+    "optional": true,
+    "choices": [
+      "fail_closed",
+      "retain_last_valid"
+    ],
+    "help": "Security posture when a sandbox rejects a candidate policy generation.",
+    "structure": {
+      "type": "string",
+      "choices": [
+        "fail_closed",
+        "retain_last_valid"
+      ],
+      "optional": true
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-server/src/config_file.rs",
+    "example": "fail_closed",
+    "manual": "how-it-works/gateways/configuration"
+  },
+  {
+    "path": "openshell.gateway.provider_profile_sources",
+    "type": "json",
+    "file": false,
+    "optional": true,
+    "choices": [],
+    "help": "",
+    "structure": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "discriminator": "type",
+        "properties": {
+          "type": {
+            "type": "string",
+            "choices": [
+              "user",
+              "interceptor"
+            ],
+            "required": true
+          }
+        },
+        "variants": {
+          "user": {},
+          "interceptor": {
+            "name": {
+              "type": "string",
+              "required": true
+            }
+          }
+        }
+      },
+      "optional": true
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-server/src/config_file.rs",
+    "example": [
+      {
+        "type": "interceptor",
+        "name": "provider-governance"
+      }
+    ],
+    "manual": "how-it-works/providers/profiles"
+  },
+  {
+    "path": "openshell.gateway.server_sans",
+    "type": "json",
+    "file": false,
+    "optional": true,
+    "choices": [],
+    "help": "Subject Alternative Names configured on the gateway server certificate. Wildcard DNS SANs also enable sandbox service URLs under that domain.",
+    "structure": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "optional": true
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-server/src/config_file.rs",
+    "example": [
+      "openshell",
+      "*.dev.openshell.localhost"
+    ],
+    "manual": "how-it-works/gateways/configuration"
+  },
+  {
+    "path": "openshell.gateway.ssh_session_ttl_secs",
+    "type": "number",
+    "file": false,
+    "optional": true,
+    "choices": [],
+    "help": "",
+    "structure": {
+      "type": "integer",
+      "minimum": 0,
+      "optional": true
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-server/src/config_file.rs",
+    "example": 3600,
+    "manual": "how-it-works/gateways/configuration"
+  },
+  {
+    "path": "openshell.gateway.supervisor_pool.recovery_timeout_secs",
+    "type": "number",
+    "file": false,
+    "optional": true,
+    "choices": [],
+    "help": "Seconds a sandbox runtime keeps its workload frozen after losing its supervisor before terminating it, from 10 to 300. The pool's supervisors offer it to each runtime; unset offers [`openshell_supervisor_control::POOL_RECOVERY_TIMEOUT_SECS`].",
+    "structure": {
+      "type": "integer",
+      "minimum": 0,
+      "optional": true
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-server/src/config_file.rs",
+    "manual": "how-it-works/gateways/configuration"
+  },
+  {
+    "path": "openshell.gateway.tls.cert_path",
+    "type": "string",
+    "file": true,
+    "optional": false,
+    "choices": [],
+    "help": "",
+    "structure": {
+      "type": "string"
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-server/src/config_file.rs",
+    "example": "/etc/openshell/certs/gateway.pem",
+    "manual": "how-it-works/gateways/configuration"
+  },
+  {
+    "path": "openshell.gateway.tls.client_ca_path",
+    "type": "string",
+    "file": true,
+    "optional": true,
+    "choices": [],
+    "help": "",
+    "structure": {
+      "type": "string",
+      "optional": true
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-server/src/config_file.rs",
+    "example": "/etc/openshell/certs/client-ca.pem",
+    "manual": "how-it-works/gateways/configuration"
+  },
+  {
+    "path": "openshell.gateway.tls.external_cert_path",
+    "type": "string",
+    "file": true,
+    "optional": true,
+    "choices": [],
+    "help": "",
+    "structure": {
+      "type": "string",
+      "optional": true
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-server/src/config_file.rs",
+    "manual": "how-it-works/gateways/configuration"
+  },
+  {
+    "path": "openshell.gateway.tls.external_key_path",
+    "type": "string",
+    "file": true,
+    "optional": true,
+    "choices": [],
+    "help": "",
+    "structure": {
+      "type": "string",
+      "optional": true
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-server/src/config_file.rs",
+    "manual": "how-it-works/gateways/configuration"
+  },
+  {
+    "path": "openshell.gateway.tls.external_server_names",
+    "type": "json",
+    "file": false,
+    "optional": false,
+    "choices": [],
+    "help": "",
+    "structure": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-server/src/config_file.rs",
+    "manual": "how-it-works/gateways/configuration"
+  },
+  {
+    "path": "openshell.gateway.tls.key_path",
+    "type": "string",
+    "file": true,
+    "optional": false,
+    "choices": [],
+    "help": "",
+    "structure": {
+      "type": "string"
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-server/src/config_file.rs",
+    "example": "/etc/openshell/certs/gateway-key.pem",
+    "manual": "how-it-works/gateways/configuration"
+  },
+  {
+    "path": "openshell.drivers.docker.allow_driver_config",
+    "type": "bool",
+    "file": false,
+    "optional": false,
+    "choices": [],
+    "help": "Permit caller-supplied driver JSON. Does not waive resource admission.",
+    "structure": {
+      "type": "boolean"
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-driver-docker/src/lib.rs",
+    "example": true,
+    "manual": "how-it-works/sandboxes/runtimes"
+  },
+  {
+    "path": "openshell.drivers.docker.app_armor_profile",
+    "type": "string",
+    "file": false,
+    "optional": true,
+    "choices": [
+      "runtime_default",
+      "unconfined"
+    ],
+    "help": "`AppArmor` confinement requested for the workload container.",
+    "structure": {
+      "type": "string",
+      "choices": [
+        "runtime_default",
+        "unconfined"
+      ],
+      "optional": true
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-driver-docker/src/lib.rs",
+    "example": "Unconfined",
+    "manual": "how-it-works/sandboxes/runtimes"
+  },
+  {
+    "path": "openshell.drivers.docker.default_image",
+    "type": "string",
+    "file": false,
+    "optional": false,
+    "choices": [],
+    "help": "Default OCI image for sandboxes.",
+    "structure": {
+      "type": "string"
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-driver-docker/src/lib.rs",
+    "example": "nvcr.io/nvidia/base/ubuntu:24.04",
+    "manual": "how-it-works/sandboxes/runtimes"
+  },
+  {
+    "path": "openshell.drivers.docker.enable_bind_mounts",
+    "type": "bool",
+    "file": false,
+    "optional": false,
+    "choices": [],
+    "help": "Allow sandbox requests to attach host bind mounts through `template.driver_config`.",
+    "structure": {
+      "type": "boolean"
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-driver-docker/src/lib.rs",
+    "example": false,
+    "manual": "how-it-works/sandboxes/runtimes"
+  },
+  {
+    "path": "openshell.drivers.docker.grpc_endpoint",
+    "type": "string",
+    "file": false,
+    "optional": false,
+    "choices": [],
+    "help": "Gateway gRPC endpoint the sandbox connects back to.",
+    "structure": {
+      "type": "string"
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-driver-docker/src/lib.rs",
+    "manual": "how-it-works/sandboxes/runtimes"
+  },
+  {
+    "path": "openshell.drivers.docker.host_gateway_ip",
+    "type": "string",
+    "file": false,
+    "optional": true,
+    "choices": [],
+    "help": "Override the trusted host address. Bridge mode otherwise resolves Docker's host-gateway.",
+    "structure": {
+      "type": "string",
+      "optional": true
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-driver-docker/src/lib.rs",
+    "manual": "how-it-works/sandboxes/runtimes"
+  },
+  {
+    "path": "openshell.drivers.docker.https_proxy",
+    "type": "string",
+    "file": false,
+    "optional": true,
+    "choices": [],
+    "help": "",
+    "structure": {
+      "type": "string",
+      "optional": true
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-core/src/config.rs",
+    "example": "https://proxy.corp.example:8443",
+    "manual": "how-it-works/sandboxes/runtimes"
+  },
+  {
+    "path": "openshell.drivers.docker.image_pull_policy",
+    "type": "string",
+    "file": false,
+    "optional": false,
+    "choices": [
+      "always",
+      "if_not_present",
+      "never",
+      "newer"
+    ],
+    "help": "Image pull policy for sandbox images.",
+    "structure": {
+      "type": "string",
+      "choices": [
+        "always",
+        "if_not_present",
+        "never",
+        "newer"
+      ]
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-driver-docker/src/lib.rs",
+    "example": "if_not_present",
+    "manual": "how-it-works/sandboxes/runtimes"
+  },
+  {
+    "path": "openshell.drivers.docker.isolation_backend",
+    "type": "string",
+    "optional": true,
+    "choices": [],
+    "help": "Select an operator-registered isolation backend. Omit for the built-in sandbox backend.",
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-server/src/config_file.rs",
+    "manual": "extensibility/isolation-backends"
+  },
+  {
+    "path": "openshell.drivers.docker.no_proxy",
+    "type": "string",
+    "file": false,
+    "optional": true,
+    "choices": [],
+    "help": "",
+    "structure": {
+      "type": "string",
+      "optional": true
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-core/src/config.rs",
+    "example": ".svc.cluster.local,10.0.0.0/8",
+    "manual": "how-it-works/sandboxes/runtimes"
+  },
+  {
+    "path": "openshell.drivers.docker.provider_spiffe_workload_api_socket",
+    "type": "string",
+    "file": true,
+    "optional": true,
+    "choices": [],
+    "help": "Host UNIX socket projected into the supervisor for provider identity.",
+    "structure": {
+      "type": "string",
+      "optional": true
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-driver-docker/src/lib.rs",
+    "example": "/run/spire/agent.sock",
+    "manual": "how-it-works/sandboxes/runtimes"
+  },
+  {
+    "path": "openshell.drivers.docker.proxy_auth_allow_insecure",
+    "type": "bool",
+    "file": false,
+    "optional": true,
+    "choices": [],
+    "help": "",
+    "structure": {
+      "type": "boolean",
+      "optional": true
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-core/src/config.rs",
+    "example": false,
+    "manual": "how-it-works/sandboxes/runtimes"
+  },
+  {
+    "path": "openshell.drivers.docker.proxy_auth_file",
+    "type": "string",
+    "file": true,
+    "optional": true,
+    "choices": [],
+    "help": "",
+    "structure": {
+      "type": "string",
+      "optional": true
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-core/src/config.rs",
+    "example": "/etc/openshell/secrets/proxy-auth",
+    "manual": "how-it-works/sandboxes/runtimes"
+  },
+  {
+    "path": "openshell.drivers.docker.proxy_ca_bundle",
+    "type": "string",
+    "file": true,
+    "optional": true,
+    "choices": [],
+    "help": "Gateway-host PEM CA bundle trusted for the corporate proxy and for server certificates re-signed by a TLS-intercepting proxy.",
+    "structure": {
+      "type": "string",
+      "optional": true
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-driver-docker/src/lib.rs",
+    "example": "/etc/openshell/tls/proxy-ca.pem",
+    "manual": "how-it-works/sandboxes/runtimes"
+  },
+  {
+    "path": "openshell.drivers.docker.proxy_connect_by_hostname",
+    "type": "bool",
+    "file": false,
+    "optional": true,
+    "choices": [],
+    "help": "",
+    "structure": {
+      "type": "boolean",
+      "optional": true
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-core/src/config.rs",
+    "example": false,
+    "manual": "how-it-works/sandboxes/runtimes"
+  },
+  {
+    "path": "openshell.drivers.docker.resource_admission.enabled",
+    "type": "bool",
+    "file": false,
+    "optional": false,
+    "choices": [],
+    "help": "",
+    "structure": {
+      "type": "boolean"
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-core/src/resource_admission.rs",
+    "example": false,
+    "manual": "how-it-works/sandboxes/runtimes"
+  },
+  {
+    "path": "openshell.drivers.docker.resource_admission.required_labels",
+    "type": "json",
+    "file": false,
+    "optional": false,
+    "choices": [],
+    "help": "",
+    "structure": {
+      "type": "object",
+      "additional": {
+        "type": "string"
+      }
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-core/src/resource_admission.rs",
+    "manual": "how-it-works/sandboxes/runtimes"
+  },
+  {
+    "path": "openshell.drivers.docker.sandbox_label",
+    "type": "string",
+    "file": false,
+    "optional": false,
+    "choices": [],
+    "help": "Value of the `openshell.sandbox_namespace` label applied to Docker sandboxes.",
+    "structure": {
+      "type": "string"
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-driver-docker/src/lib.rs",
+    "example": "docker-dev",
+    "manual": "how-it-works/sandboxes/runtimes"
+  },
+  {
+    "path": "openshell.drivers.docker.sandbox_pids_limit",
+    "type": "number",
+    "file": false,
+    "optional": true,
+    "choices": [],
+    "help": "Container cgroup PID limit for Docker-managed sandboxes.  Omit the field to use `OpenShell`'s default sandbox process limit. Explicit zero is invalid.",
+    "structure": {
+      "type": "integer",
+      "minimum": 1,
+      "optional": true
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-driver-docker/src/lib.rs",
+    "example": 2048,
+    "manual": "how-it-works/sandboxes/runtimes"
+  },
+  {
+    "path": "openshell.drivers.docker.sandbox_runtime_image",
+    "type": "string",
+    "file": false,
+    "optional": true,
+    "choices": [],
+    "help": "Image containing the trusted `openshell-sandbox` binary.",
+    "structure": {
+      "type": "string",
+      "optional": true
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-driver-docker/src/lib.rs",
+    "manual": "how-it-works/sandboxes/runtimes"
+  },
+  {
+    "path": "openshell.drivers.docker.socket_path",
+    "type": "string",
+    "file": true,
+    "optional": true,
+    "choices": [],
+    "help": "Docker API Unix socket. When unset, use the socket selected by gateway auto-detection, falling back to `/var/run/docker.sock` for an explicitly configured Docker driver.",
+    "structure": {
+      "type": "string",
+      "optional": true
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-driver-docker/src/lib.rs",
+    "example": "/var/run/docker.sock",
+    "manual": "how-it-works/sandboxes/runtimes"
+  },
+  {
+    "path": "openshell.drivers.docker.ssh_socket_path",
+    "type": "string",
+    "file": false,
+    "optional": false,
+    "choices": [],
+    "help": "Unix socket path used for interactive sandbox access.",
+    "structure": {
+      "type": "string"
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-driver-docker/src/lib.rs",
+    "manual": "how-it-works/sandboxes/runtimes"
+  },
+  {
+    "path": "openshell.drivers.docker.supervisor_bin",
+    "type": "string",
+    "file": true,
+    "optional": true,
+    "choices": [],
+    "help": "Optional host path to the trusted `openshell-sandbox` binary.  This preserves the original `supervisor_bin` configuration name while the split runtime transitions to the explicit sandbox image setting.",
+    "structure": {
+      "type": "string",
+      "optional": true
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-driver-docker/src/lib.rs",
+    "manual": "how-it-works/sandboxes/runtimes"
+  },
+  {
+    "path": "openshell.drivers.docker.supervisor_image",
+    "type": "string",
+    "file": false,
+    "optional": true,
+    "choices": [],
+    "help": "Image containing the trusted `openshell-supervisor` binary.",
+    "structure": {
+      "type": "string",
+      "optional": true
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-driver-docker/src/lib.rs",
+    "manual": "how-it-works/sandboxes/runtimes"
+  },
+  {
+    "path": "openshell.drivers.docker.supervisor_network_mode",
+    "type": "string",
+    "file": false,
+    "optional": false,
+    "choices": [
+      "auto",
+      "host",
+      "bridge"
+    ],
+    "help": "Networking mode for the supervisor only. Workloads always use network=none.",
+    "structure": {
+      "type": "string",
+      "choices": [
+        "auto",
+        "host",
+        "bridge"
+      ]
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-driver-docker/src/lib.rs",
+    "example": "host",
+    "manual": "how-it-works/sandboxes/runtimes"
+  },
+  {
+    "path": "openshell.drivers.kubernetes.allow_driver_config",
+    "type": "bool",
+    "file": false,
+    "optional": false,
+    "choices": [],
+    "help": "Permit caller-supplied driver JSON. Does not waive resource admission.",
+    "structure": {
+      "type": "boolean"
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-driver-kubernetes/src/config.rs",
+    "example": true,
+    "manual": "how-it-works/sandboxes/runtimes"
+  },
+  {
+    "path": "openshell.drivers.kubernetes.allowed_pod_annotations",
+    "type": "json",
+    "file": false,
+    "optional": false,
+    "choices": [],
+    "help": "Pod annotation keys that sandbox templates may set. Each entry is an exact key (`example.com/team`) or a prefix wildcard (`example.com/*`). Empty (default) rejects every caller-supplied pod annotation.  Keys in `openshell.ai` and `agents.x-k8s.io` (and their subdomains) are always rejected and cannot be allowlisted. `OpenShell` writes sandbox identity under `openshell.ai`, and the Agent Sandbox controller owns `agents.x-k8s.io` and strips those keys from pod templates.",
+    "structure": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-driver-kubernetes/src/config.rs",
+    "manual": "how-it-works/sandboxes/runtimes"
+  },
+  {
+    "path": "openshell.drivers.kubernetes.allowed_pod_labels",
+    "type": "json",
+    "file": false,
+    "optional": false,
+    "choices": [],
+    "help": "Pod label keys that sandbox templates may set, using the same entry format and reserved domains as `allowed_pod_annotations`. Empty (default) rejects every caller-supplied pod label.",
+    "structure": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-driver-kubernetes/src/config.rs",
+    "manual": "how-it-works/sandboxes/runtimes"
+  },
+  {
+    "path": "openshell.drivers.kubernetes.client_tls_secret_name",
+    "type": "string",
+    "file": false,
+    "optional": false,
+    "choices": [],
+    "help": "",
+    "structure": {
+      "type": "string"
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-driver-kubernetes/src/config.rs",
+    "example": "openshell-client-tls",
+    "manual": "how-it-works/sandboxes/runtimes"
+  },
+  {
+    "path": "openshell.drivers.kubernetes.default_image",
+    "type": "string",
+    "file": false,
+    "optional": false,
+    "choices": [],
+    "help": "",
+    "structure": {
+      "type": "string"
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-driver-kubernetes/src/config.rs",
+    "example": "nvcr.io/nvidia/base/ubuntu:24.04",
+    "manual": "how-it-works/sandboxes/runtimes"
+  },
+  {
+    "path": "openshell.drivers.kubernetes.default_runtime_class_name",
+    "type": "string",
+    "file": false,
+    "optional": false,
+    "choices": [],
+    "help": "Default Kubernetes `runtimeClassName` for sandbox pods. Applied when a `CreateSandbox` request does not specify one. Empty string (default) = omit the field, using the cluster default.",
+    "structure": {
+      "type": "string"
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-driver-kubernetes/src/config.rs",
+    "manual": "how-it-works/sandboxes/runtimes"
+  },
+  {
+    "path": "openshell.drivers.kubernetes.enable_user_namespaces",
+    "type": "bool",
+    "file": false,
+    "optional": false,
+    "choices": [],
+    "help": "",
+    "structure": {
+      "type": "boolean"
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-driver-kubernetes/src/config.rs",
+    "example": false,
+    "manual": "how-it-works/sandboxes/runtimes"
+  },
+  {
+    "path": "openshell.drivers.kubernetes.gateway_id",
+    "type": "string",
+    "file": false,
+    "optional": false,
+    "choices": [],
+    "help": "Stable gateway identity used in managed-mode namespace naming (`openshell-{gateway_id}-{workspace}`). Propagated from `gateway_jwt.gateway_id`.",
+    "structure": {
+      "type": "string"
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-driver-kubernetes/src/config.rs",
+    "manual": "how-it-works/sandboxes/runtimes"
+  },
+  {
+    "path": "openshell.drivers.kubernetes.grpc_endpoint",
+    "type": "string",
+    "file": false,
+    "optional": false,
+    "choices": [],
+    "help": "",
+    "structure": {
+      "type": "string"
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-driver-kubernetes/src/config.rs",
+    "example": "https://openshell-gateway.openshell.svc:8080",
+    "manual": "how-it-works/sandboxes/runtimes"
+  },
+  {
+    "path": "openshell.drivers.kubernetes.host_gateway_ip",
+    "type": "string",
+    "file": false,
+    "optional": false,
+    "choices": [],
+    "help": "",
+    "structure": {
+      "type": "string"
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-driver-kubernetes/src/config.rs",
+    "example": "10.0.0.1",
+    "manual": "how-it-works/sandboxes/runtimes"
+  },
+  {
+    "path": "openshell.drivers.kubernetes.https_proxy",
+    "type": "string",
+    "file": false,
+    "optional": true,
+    "choices": [],
+    "help": "Corporate HTTP forward proxy used by the network supervisor for policy-approved TLS CONNECT egress.",
+    "structure": {
+      "type": "string",
+      "optional": true
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-driver-kubernetes/src/config.rs",
+    "manual": "how-it-works/sandboxes/runtimes"
+  },
+  {
+    "path": "openshell.drivers.kubernetes.image_pull_policy",
+    "type": "string",
+    "file": false,
+    "optional": true,
+    "choices": [
+      "always",
+      "if_not_present",
+      "never"
+    ],
+    "help": "",
+    "structure": {
+      "type": "string",
+      "choices": [
+        "always",
+        "if_not_present",
+        "never"
+      ],
+      "optional": true
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-driver-kubernetes/src/config.rs",
+    "example": "if_not_present",
+    "manual": "how-it-works/sandboxes/runtimes"
+  },
+  {
+    "path": "openshell.drivers.kubernetes.image_pull_secrets",
+    "type": "json",
+    "file": false,
+    "optional": false,
+    "choices": [],
+    "help": "Kubernetes `imagePullSecrets` names attached to sandbox pods.",
+    "structure": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-driver-kubernetes/src/config.rs",
+    "example": [
+      "regcred"
+    ],
+    "manual": "how-it-works/sandboxes/runtimes"
+  },
+  {
+    "path": "openshell.drivers.kubernetes.isolation_backend",
+    "type": "string",
+    "optional": true,
+    "choices": [],
+    "help": "Select an operator-registered isolation backend. Omit for the built-in sandbox backend.",
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-server/src/config_file.rs",
+    "manual": "extensibility/isolation-backends"
+  },
+  {
+    "path": "openshell.drivers.kubernetes.managed_ssh_ingress.enabled",
+    "type": "bool",
+    "file": false,
+    "optional": false,
+    "choices": [],
+    "help": "",
+    "structure": {
+      "type": "boolean"
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-driver-kubernetes/src/config.rs",
+    "example": true,
+    "manual": "how-it-works/sandboxes/runtimes"
+  },
+  {
+    "path": "openshell.drivers.kubernetes.managed_ssh_ingress.gateway_namespace",
+    "type": "string",
+    "file": false,
+    "optional": false,
+    "choices": [],
+    "help": "",
+    "structure": {
+      "type": "string"
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-driver-kubernetes/src/config.rs",
+    "example": "openshell",
+    "manual": "how-it-works/sandboxes/runtimes"
+  },
+  {
+    "path": "openshell.drivers.kubernetes.managed_ssh_ingress.gateway_pod_selector",
+    "type": "json",
+    "file": false,
+    "optional": false,
+    "choices": [],
+    "help": "",
+    "structure": {
+      "type": "object",
+      "additional": {
+        "type": "string"
+      }
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-driver-kubernetes/src/config.rs",
+    "manual": "how-it-works/sandboxes/runtimes"
+  },
+  {
+    "path": "openshell.drivers.kubernetes.namespace",
+    "type": "string",
+    "file": false,
+    "optional": false,
+    "choices": [],
+    "help": "",
+    "structure": {
+      "type": "string"
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-driver-kubernetes/src/config.rs",
+    "example": "openshell",
+    "manual": "how-it-works/sandboxes/runtimes"
+  },
+  {
+    "path": "openshell.drivers.kubernetes.no_proxy",
+    "type": "string",
+    "file": false,
+    "optional": true,
+    "choices": [],
+    "help": "Comma-separated destinations that bypass the corporate proxy while continuing through `OpenShell` policy evaluation.",
+    "structure": {
+      "type": "string",
+      "optional": true
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-driver-kubernetes/src/config.rs",
+    "manual": "how-it-works/sandboxes/runtimes"
+  },
+  {
+    "path": "openshell.drivers.kubernetes.operator_namespace_file",
+    "type": "string",
+    "file": false,
+    "optional": true,
+    "choices": [],
+    "help": "Path to a JSON file containing an array of namespace names allowed in operator mode. Hot-reloaded on change. Delivered via `ConfigMap` volume mount.",
+    "structure": {
+      "type": "string",
+      "optional": true
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-driver-kubernetes/src/config.rs",
+    "manual": "how-it-works/sandboxes/runtimes"
+  },
+  {
+    "path": "openshell.drivers.kubernetes.operator_namespace_label",
+    "type": "string",
+    "file": false,
+    "optional": true,
+    "choices": [],
+    "help": "K8s label selector for operator-mode namespace discovery (e.g., `\"openshell.ai/workspace=true\"`). The driver watches namespaces matching this label and builds the allowlist dynamically.",
+    "structure": {
+      "type": "string",
+      "optional": true
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-driver-kubernetes/src/config.rs",
+    "manual": "how-it-works/sandboxes/runtimes"
+  },
+  {
+    "path": "openshell.drivers.kubernetes.provider_spiffe_workload_api_socket_path",
+    "type": "string",
+    "file": false,
+    "optional": false,
+    "choices": [],
+    "help": "SPIFFE Workload API socket path mounted into sandbox pods for dynamic provider token grants. Empty disables provider token-grant SPIFFE material.",
+    "structure": {
+      "type": "string"
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-driver-kubernetes/src/config.rs",
+    "example": "/spiffe-workload-api/spire-agent.sock",
+    "manual": "how-it-works/sandboxes/runtimes"
+  },
+  {
+    "path": "openshell.drivers.kubernetes.proxy_auth_allow_insecure",
+    "type": "bool",
+    "file": false,
+    "optional": true,
+    "choices": [],
+    "help": "Explicit acknowledgement that Basic authentication is cleartext over the connection to an `http://` forward proxy.",
+    "structure": {
+      "type": "boolean",
+      "optional": true
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-driver-kubernetes/src/config.rs",
+    "manual": "how-it-works/sandboxes/runtimes"
+  },
+  {
+    "path": "openshell.drivers.kubernetes.proxy_auth_secret_key",
+    "type": "string",
+    "file": false,
+    "optional": true,
+    "choices": [],
+    "help": "Key in `proxy_auth_secret_name` containing the `user:pass` credential.",
+    "structure": {
+      "type": "string",
+      "optional": true
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-driver-kubernetes/src/config.rs",
+    "manual": "how-it-works/sandboxes/runtimes"
+  },
+  {
+    "path": "openshell.drivers.kubernetes.proxy_auth_secret_name",
+    "type": "string",
+    "file": false,
+    "optional": true,
+    "choices": [],
+    "help": "Name of the Kubernetes Secret holding the `user:pass` proxy credential. The Secret is mounted only in the network-supervising container. The driver validates this reference at startup; the supervisor validates the Secret content when kubelet mounts it before accepting egress.",
+    "structure": {
+      "type": "string",
+      "optional": true
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-driver-kubernetes/src/config.rs",
+    "manual": "how-it-works/sandboxes/runtimes"
+  },
+  {
+    "path": "openshell.drivers.kubernetes.proxy_ca_bundle",
+    "type": "string",
+    "file": false,
+    "optional": true,
+    "choices": [],
+    "help": "Path, on the gateway Pod's filesystem, to a PEM CA bundle trusted for the corporate proxy.  A CA certificate is not secret, so the gateway reads this file and stages it into the per-generation supervisor bootstrap Secret, which kubelet mounts read-only in the supervisor Pod. The supervisor trusts it for the TLS handshake with an `https://` proxy and, because a TLS-intercepting proxy re-signs tunneled server certificates with the same CA, folds it into the sandbox trust bundle and upstream verification.  The bundle is deliberately read from the gateway's own filesystem rather than referenced as an object in the sandbox namespace: it becomes a trust anchor for every upstream the sandbox reaches, so it must stay in the gateway's trust domain. The staging Secret is immutable, so the anchor cannot change underneath a running sandbox. Only meaningful with `https_proxy` set; the bundle must exist and contain at least one usable trust anchor.",
+    "structure": {
+      "type": "string",
+      "optional": true
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-driver-kubernetes/src/config.rs",
+    "manual": "how-it-works/sandboxes/runtimes"
+  },
+  {
+    "path": "openshell.drivers.kubernetes.proxy_connect_by_hostname",
+    "type": "bool",
+    "file": false,
+    "optional": true,
+    "choices": [],
+    "help": "Send hostnames rather than validated IPs in CONNECT requests. This is a last-resort compatibility mode for hostname-filtering proxy ACLs.",
+    "structure": {
+      "type": "boolean",
+      "optional": true
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-driver-kubernetes/src/config.rs",
+    "manual": "how-it-works/sandboxes/runtimes"
+  },
+  {
+    "path": "openshell.drivers.kubernetes.resource_admission.enabled",
+    "type": "bool",
+    "file": false,
+    "optional": false,
+    "choices": [],
+    "help": "",
+    "structure": {
+      "type": "boolean"
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-core/src/resource_admission.rs",
+    "example": true,
+    "manual": "how-it-works/sandboxes/runtimes"
+  },
+  {
+    "path": "openshell.drivers.kubernetes.resource_admission.required_labels",
+    "type": "json",
+    "file": false,
+    "optional": false,
+    "choices": [],
+    "help": "",
+    "structure": {
+      "type": "object",
+      "additional": {
+        "type": "string"
+      }
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-core/src/resource_admission.rs",
+    "manual": "how-it-works/sandboxes/runtimes"
+  },
+  {
+    "path": "openshell.drivers.kubernetes.sa_token_ttl_secs",
+    "type": "number",
+    "file": false,
+    "optional": false,
+    "choices": [],
+    "help": "Lifetime (seconds) of the projected `ServiceAccount` token kubelet writes into each sandbox pod. Used only for the one-shot `IssueSandboxToken` bootstrap exchange — the gateway-minted JWT that follows has its own TTL set via `gateway_jwt.ttl_secs`.  Kubelet enforces a minimum of 600 seconds; the supervisor uses this token within a few seconds of pod start, so any value at the floor is sufficient. Default 3600.",
+    "structure": {
+      "type": "integer"
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-driver-kubernetes/src/config.rs",
+    "example": 3600,
+    "manual": "how-it-works/sandboxes/runtimes"
+  },
+  {
+    "path": "openshell.drivers.kubernetes.sandbox_gid",
+    "type": "number",
+    "file": false,
+    "optional": true,
+    "choices": [],
+    "help": "GID used alongside `sandbox_uid` for PVC init container operations. When empty and `sandbox_uid` is set, defaults to the resolved UID.",
+    "structure": {
+      "type": "integer",
+      "minimum": 0,
+      "optional": true
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-driver-kubernetes/src/config.rs",
+    "manual": "how-it-works/sandboxes/runtimes"
+  },
+  {
+    "path": "openshell.drivers.kubernetes.sandbox_runtime.boundary_port",
+    "type": "number",
+    "file": false,
+    "optional": false,
+    "choices": [],
+    "help": "TCP port of the Sandbox Protocol listener: the workload boundary for supervisor-initiated sandboxes, the supervisor for runtime-initiated ones.",
+    "structure": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-driver-kubernetes/src/config.rs",
+    "example": 5500,
+    "manual": "how-it-works/sandboxes/runtimes"
+  },
+  {
+    "path": "openshell.drivers.kubernetes.sandbox_runtime_image",
+    "type": "string",
+    "file": false,
+    "optional": false,
+    "choices": [],
+    "help": "Image that provides the trusted `openshell-sandbox` bootstrap binary.",
+    "structure": {
+      "type": "string"
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-driver-kubernetes/src/config.rs",
+    "manual": "how-it-works/sandboxes/runtimes"
+  },
+  {
+    "path": "openshell.drivers.kubernetes.sandbox_runtime_image_pull_policy",
+    "type": "string",
+    "file": false,
+    "optional": true,
+    "choices": [
+      "always",
+      "if_not_present",
+      "never"
+    ],
+    "help": "Kubernetes `imagePullPolicy` for the sandbox runtime image. When omitted, Kubernetes selects its default.",
+    "structure": {
+      "type": "string",
+      "choices": [
+        "always",
+        "if_not_present",
+        "never"
+      ],
+      "optional": true
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-driver-kubernetes/src/config.rs",
+    "example": "if_not_present",
+    "manual": "how-it-works/sandboxes/runtimes"
+  },
+  {
+    "path": "openshell.drivers.kubernetes.sandbox_uid",
+    "type": "number",
+    "file": false,
+    "optional": true,
+    "choices": [],
+    "help": "Exact UID shared by `openshell-sandbox`, its agent children, the trusted workspace/bootstrap init containers, and `openshell-supervisor`. When empty, the driver auto-detects from `OpenShift` SCC annotations on the target namespace; if those are also absent, falls back to `10001`.",
+    "structure": {
+      "type": "integer",
+      "minimum": 0,
+      "optional": true
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-driver-kubernetes/src/config.rs",
+    "manual": "how-it-works/sandboxes/runtimes"
+  },
+  {
+    "path": "openshell.drivers.kubernetes.service_account_name",
+    "type": "string",
+    "file": false,
+    "optional": false,
+    "choices": [],
+    "help": "Kubernetes `ServiceAccount` assigned to the workload and supervisor Pods. Automatic token mounting is disabled; only the supervisor receives an explicit audience-bound projected token accepted by the bootstrap authenticator.",
+    "structure": {
+      "type": "string"
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-driver-kubernetes/src/config.rs",
+    "example": "openshell-sandbox",
+    "manual": "how-it-works/sandboxes/runtimes"
+  },
+  {
+    "path": "openshell.drivers.kubernetes.shared_supervisor.runtime_port",
+    "type": "number",
+    "file": false,
+    "optional": false,
+    "choices": [],
+    "help": "Service port for runtime-initiated Sandbox Protocol connections.",
+    "structure": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-driver-kubernetes/src/config.rs",
+    "manual": "how-it-works/sandboxes/runtimes"
+  },
+  {
+    "path": "openshell.drivers.kubernetes.shared_supervisor.service_name",
+    "type": "string",
+    "file": false,
+    "optional": false,
+    "choices": [],
+    "help": "Service selecting the shared supervisor Pod.",
+    "structure": {
+      "type": "string"
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-driver-kubernetes/src/config.rs",
+    "manual": "how-it-works/sandboxes/runtimes"
+  },
+  {
+    "path": "openshell.drivers.kubernetes.shared_supervisor.service_namespace",
+    "type": "string",
+    "file": false,
+    "optional": false,
+    "choices": [],
+    "help": "",
+    "structure": {
+      "type": "string"
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-driver-kubernetes/src/config.rs",
+    "manual": "how-it-works/sandboxes/runtimes"
+  },
+  {
+    "path": "openshell.drivers.kubernetes.shared_supervisor.token_secret_name",
+    "type": "string",
+    "file": false,
+    "optional": false,
+    "choices": [],
+    "help": "Secret in `service_namespace` the driver keeps current with the gateway-minted supervisor token (key `token`); the supervisor Pod mounts it and presents the token on its assignment stream.",
+    "structure": {
+      "type": "string"
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-driver-kubernetes/src/config.rs",
+    "manual": "how-it-works/sandboxes/runtimes"
+  },
+  {
+    "path": "openshell.drivers.kubernetes.ssh_socket_path",
+    "type": "string",
+    "file": false,
+    "optional": false,
+    "choices": [],
+    "help": "",
+    "structure": {
+      "type": "string"
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-driver-kubernetes/src/config.rs",
+    "example": "/run/openshell/ssh.sock",
+    "manual": "how-it-works/sandboxes/runtimes"
+  },
+  {
+    "path": "openshell.drivers.kubernetes.supervisor_image",
+    "type": "string",
+    "file": false,
+    "optional": false,
+    "choices": [],
+    "help": "Image that provides the trusted `openshell-supervisor` control binary.",
+    "structure": {
+      "type": "string"
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-driver-kubernetes/src/config.rs",
+    "manual": "how-it-works/sandboxes/runtimes"
+  },
+  {
+    "path": "openshell.drivers.kubernetes.supervisor_image_pull_policy",
+    "type": "string",
+    "file": false,
+    "optional": true,
+    "choices": [
+      "always",
+      "if_not_present",
+      "never"
+    ],
+    "help": "Kubernetes `imagePullPolicy` for the supervisor image. When omitted, Kubernetes selects its default.",
+    "structure": {
+      "type": "string",
+      "choices": [
+        "always",
+        "if_not_present",
+        "never"
+      ],
+      "optional": true
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-driver-kubernetes/src/config.rs",
+    "example": "if_not_present",
+    "manual": "how-it-works/sandboxes/runtimes"
+  },
+  {
+    "path": "openshell.drivers.kubernetes.supervisor_topology",
+    "type": "string",
+    "file": false,
+    "optional": true,
+    "choices": [
+      "gateway",
+      "workspace"
+    ],
+    "help": "Supervise new sandbox generations with one supervisor shared by the gateway instead of a supervisor Pod per sandbox. Existing generations keep the topology recorded when they started.",
+    "structure": {
+      "type": "string",
+      "choices": [
+        "gateway",
+        "workspace"
+      ],
+      "optional": true
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-driver-kubernetes/src/config.rs",
+    "manual": "how-it-works/sandboxes/runtimes"
+  },
+  {
+    "path": "openshell.drivers.kubernetes.workspace_default_storage_size",
+    "type": "string",
+    "file": false,
+    "optional": false,
+    "choices": [],
+    "help": "",
+    "structure": {
+      "type": "string"
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-driver-kubernetes/src/config.rs",
+    "example": "10Gi",
+    "manual": "how-it-works/sandboxes/runtimes"
+  },
+  {
+    "path": "openshell.drivers.kubernetes.workspace_mode",
+    "type": "string",
+    "file": false,
+    "optional": false,
+    "choices": [
+      "shared",
+      "managed",
+      "operator"
+    ],
+    "help": "How workspaces map to Kubernetes namespaces. `\"shared\"` (default) renders all sandboxes into `namespace`; `\"managed\"` creates per-workspace namespaces on demand; `\"operator\"` uses pre-provisioned namespaces.",
+    "structure": {
+      "type": "string",
+      "choices": [
+        "shared",
+        "managed",
+        "operator"
+      ]
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-driver-kubernetes/src/config.rs",
+    "example": "shared",
+    "manual": "how-it-works/sandboxes/runtimes"
+  },
+  {
+    "path": "openshell.drivers.kubernetes.workspace_storage_class",
+    "type": "string",
+    "file": false,
+    "optional": false,
+    "choices": [],
+    "help": "Kubernetes `StorageClass` name for the default workspace PVC. Empty string (default) = omit `storageClassName`, using the cluster's default `StorageClass`. Set this on clusters with no default `StorageClass`, otherwise the workspace PVC stays `Pending` and the sandbox never starts.",
+    "structure": {
+      "type": "string"
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-driver-kubernetes/src/config.rs",
+    "manual": "how-it-works/sandboxes/runtimes"
+  },
+  {
+    "path": "openshell.drivers.podman.additional_ca_bundle",
+    "type": "string",
+    "file": false,
+    "optional": true,
+    "choices": [],
+    "help": "Path (on the gateway host) to a PEM CA bundle trusted for direct (non-proxied), policy-inspected HTTPS egress to destinations signed by a private CA.  Unlike [`proxy_ca_bundle`](Self::proxy_ca_bundle), this applies regardless of whether `https_proxy` is configured: it addresses supervisors that run as their own container, separate from the workload image, and therefore cannot inherit a private CA baked into the workload's system trust store. The gateway bind-mounts this file read-only into the supervisor container (at [`ADDITIONAL_CA_MOUNT_PATH`](openshell_core::driver_utils::ADDITIONAL_CA_MOUNT_PATH)) and passes its path via `--additional-ca-bundle`. The supervisor folds it into its upstream TLS trust store alongside (not instead of) the system CA bundle. The bundle must exist and contain at least one certificate; this is validated on the gateway host at sandbox-create time, not deferred until the supervisor container starts.",
+    "structure": {
+      "type": "string",
+      "optional": true
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-driver-podman/src/config.rs",
+    "manual": "how-it-works/sandboxes/runtimes"
+  },
+  {
+    "path": "openshell.drivers.podman.allow_driver_config",
+    "type": "bool",
+    "file": false,
+    "optional": false,
+    "choices": [],
+    "help": "Permit caller-supplied driver JSON. Does not waive resource admission.",
+    "structure": {
+      "type": "boolean"
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-driver-podman/src/config.rs",
+    "manual": "how-it-works/sandboxes/runtimes"
+  },
+  {
+    "path": "openshell.drivers.podman.app_armor_profile",
+    "type": "string",
+    "file": false,
+    "optional": true,
+    "choices": [
+      "runtime_default",
+      "unconfined"
+    ],
+    "help": "`AppArmor` confinement requested for the workload container. Omission sends no override and preserves Podman's runtime-selected profile.",
+    "structure": {
+      "type": "string",
+      "choices": [
+        "runtime_default",
+        "unconfined"
+      ],
+      "optional": true
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-driver-podman/src/config.rs",
+    "manual": "how-it-works/sandboxes/runtimes"
+  },
+  {
+    "path": "openshell.drivers.podman.default_image",
+    "type": "string",
+    "file": false,
+    "optional": false,
+    "choices": [],
+    "help": "Default OCI image for sandboxes.",
+    "structure": {
+      "type": "string"
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-driver-podman/src/config.rs",
+    "example": "nvcr.io/nvidia/base/ubuntu:24.04",
+    "manual": "how-it-works/sandboxes/runtimes"
+  },
+  {
+    "path": "openshell.drivers.podman.enable_bind_mounts",
+    "type": "bool",
+    "file": false,
+    "optional": false,
+    "choices": [],
+    "help": "Allow sandbox requests to attach host bind mounts through `template.driver_config`.",
+    "structure": {
+      "type": "boolean"
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-driver-podman/src/config.rs",
+    "example": false,
+    "manual": "how-it-works/sandboxes/runtimes"
+  },
+  {
+    "path": "openshell.drivers.podman.gateway_port",
+    "type": "number",
+    "file": false,
+    "optional": false,
+    "choices": [],
+    "help": "Port the gateway server is actually listening on.  Used by the driver's auto-detection fallback when `grpc_endpoint` is empty.  The server must set this to `config.bind_address.port()` so the correct port is used even when `--port` differs from the default.  Defaults to [`openshell_core::config::DEFAULT_SERVER_PORT`].",
+    "structure": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-driver-podman/src/config.rs",
+    "example": 17670,
+    "manual": "how-it-works/sandboxes/runtimes"
+  },
+  {
+    "path": "openshell.drivers.podman.gidmap",
+    "type": "json",
+    "file": false,
+    "optional": false,
+    "choices": [],
+    "help": "Explicit GID mappings for `userns = \"private\"`. Each entry is `\"container_id:host_id:size\"`.",
+    "structure": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-driver-podman/src/config.rs",
+    "manual": "how-it-works/sandboxes/runtimes"
+  },
+  {
+    "path": "openshell.drivers.podman.grpc_endpoint",
+    "type": "string",
+    "file": false,
+    "optional": false,
+    "choices": [],
+    "help": "Gateway gRPC endpoint the sandbox connects back to.  When empty, the driver selects loopback on Linux or `host.containers.internal` with Podman Machine, using `gateway_port`.",
+    "structure": {
+      "type": "string"
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-driver-podman/src/config.rs",
+    "example": "https://127.0.0.1:17670",
+    "manual": "how-it-works/sandboxes/runtimes"
+  },
+  {
+    "path": "openshell.drivers.podman.guest_tls_ca",
+    "type": "string",
+    "file": true,
+    "optional": true,
+    "choices": [],
+    "help": "Host path to the CA certificate for sandbox-to-gateway TLS.  When set, the driver mounts the CA into supervisor containers and switches the auto-detected endpoint from `http://` to `https://`.",
+    "structure": {
+      "type": "string",
+      "optional": true
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-driver-podman/src/config.rs",
+    "manual": "how-it-works/sandboxes/runtimes"
+  },
+  {
+    "path": "openshell.drivers.podman.health_check_interval_secs",
+    "type": "number",
+    "file": false,
+    "optional": true,
+    "choices": [],
+    "help": "Health check interval in seconds for supervisor containers.  Podman runs the health check command at this interval to determine container readiness. Lower values detect readiness faster but increase process churn (each check spawns a conmon subprocess). Omit the field to disable health checks entirely. Explicit zero is invalid.",
+    "structure": {
+      "type": "integer",
+      "minimum": 1,
+      "optional": true
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-driver-podman/src/config.rs",
+    "example": 10,
+    "manual": "how-it-works/sandboxes/runtimes"
+  },
+  {
+    "path": "openshell.drivers.podman.host_gateway_ip",
+    "type": "string",
+    "file": false,
+    "optional": false,
+    "choices": [],
+    "help": "Trusted supervisor-side destination for sandbox host-gateway aliases.  Empty uses supervisor loopback on Linux and gvproxy's host-loopback IP with Podman Machine. The resolved address is pinned into the protected runtime descriptor; sandbox policy DNS never trusts workload resolver state for `host.openshell.internal`.",
+    "structure": {
+      "type": "string"
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-driver-podman/src/config.rs",
+    "manual": "how-it-works/sandboxes/runtimes"
+  },
+  {
+    "path": "openshell.drivers.podman.https_proxy",
+    "type": "string",
+    "file": false,
+    "optional": true,
+    "choices": [],
+    "help": "Corporate forward proxy URL passed to the in-container supervisor (e.g. `http://proxy.corp.com:8080` or `https://proxy.corp.com:3130`).  The supervisor chains policy-approved TLS tunnels through this proxy with HTTP CONNECT instead of dialing upstream destinations directly. `http://` and `https://` proxy URLs in explicit `scheme://host:port` form (scheme and port required) are supported; for an `https://` proxy the supervisor wraps the proxy connection in TLS, verifying the proxy certificate against the built-in and system roots plus the optional [`proxy_ca_bundle`](Self::proxy_ca_bundle). This is an operator-owned egress boundary delivered on the supervisor's command line, so sandbox/template environment cannot override it, and the conventional `HTTPS_PROXY` variables are not used.",
+    "structure": {
+      "type": "string",
+      "optional": true
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-driver-podman/src/config.rs",
+    "manual": "how-it-works/sandboxes/runtimes"
+  },
+  {
+    "path": "openshell.drivers.podman.image_pull_policy",
+    "type": "string",
+    "file": false,
+    "optional": false,
+    "choices": [
+      "always",
+      "if_not_present",
+      "never",
+      "newer"
+    ],
+    "help": "Image pull policy for sandbox images.",
+    "structure": {
+      "type": "string",
+      "choices": [
+        "always",
+        "if_not_present",
+        "never",
+        "newer"
+      ]
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-driver-podman/src/config.rs",
+    "example": "if_not_present",
+    "manual": "how-it-works/sandboxes/runtimes"
+  },
+  {
+    "path": "openshell.drivers.podman.isolation_backend",
+    "type": "string",
+    "optional": true,
+    "choices": [],
+    "help": "Select an operator-registered isolation backend. Omit for the built-in sandbox backend.",
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-server/src/config_file.rs",
+    "manual": "extensibility/isolation-backends"
+  },
+  {
+    "path": "openshell.drivers.podman.network_name",
+    "type": "string",
+    "file": false,
+    "optional": false,
+    "choices": [],
+    "help": "Name of the Podman bridge network used for driver-managed resources.",
+    "structure": {
+      "type": "string"
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-driver-podman/src/config.rs",
+    "example": "openshell",
+    "manual": "how-it-works/sandboxes/runtimes"
+  },
+  {
+    "path": "openshell.drivers.podman.no_proxy",
+    "type": "string",
+    "file": false,
+    "optional": true,
+    "choices": [],
+    "help": "Comma-separated `NO_PROXY` list passed alongside the proxy URL (e.g. `*.svc.cluster.local,10.0.0.0/8`). Destinations matching an entry are dialed directly instead of through the corporate proxy. Entries take an optional `:port` qualifier that limits them to that destination port, and IP/CIDR entries also match hostnames through their validated DNS resolution.",
+    "structure": {
+      "type": "string",
+      "optional": true
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-driver-podman/src/config.rs",
+    "manual": "how-it-works/sandboxes/runtimes"
+  },
+  {
+    "path": "openshell.drivers.podman.provider_spiffe_workload_api_socket",
+    "type": "string",
+    "file": true,
+    "optional": true,
+    "choices": [],
+    "help": "Host path to a SPIFFE Workload API Unix socket exposed to sandbox supervisors for provider token exchange client assertions.",
+    "structure": {
+      "type": "string",
+      "optional": true
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-driver-podman/src/config.rs",
+    "manual": "how-it-works/sandboxes/runtimes"
+  },
+  {
+    "path": "openshell.drivers.podman.proxy_auth_allow_insecure",
+    "type": "bool",
+    "file": false,
+    "optional": true,
+    "choices": [],
+    "help": "Explicit acknowledgement that proxy credentials are sent in cleartext.  `Proxy-Authorization: Basic` is base64, not encryption, and the connection to an `http://` corporate proxy is plain TCP, so anyone on the network path between the sandbox host and the proxy can recover the credential. Setting `proxy_auth_file` therefore requires `proxy_auth_allow_insecure = true`; without it the configuration is rejected at startup. Set it only when the path to the proxy is a trusted network segment.",
+    "structure": {
+      "type": "boolean",
+      "optional": true
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-driver-podman/src/config.rs",
+    "manual": "how-it-works/sandboxes/runtimes"
+  },
+  {
+    "path": "openshell.drivers.podman.proxy_auth_file",
+    "type": "string",
+    "file": false,
+    "optional": true,
+    "choices": [],
+    "help": "Path (on the gateway host) to a file containing the corporate proxy credentials as `user:pass`.  Credentials must be supplied through this file, never embedded in the proxy URL: an inline `user:pass@` in `https_proxy` is rejected at startup because it would leak into `gateway.toml` and container metadata. The gateway reads this file at sandbox-create time and delivers it to the supervisor through a root-only secret mount.",
+    "structure": {
+      "type": "string",
+      "optional": true
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-driver-podman/src/config.rs",
+    "manual": "how-it-works/sandboxes/runtimes"
+  },
+  {
+    "path": "openshell.drivers.podman.proxy_ca_bundle",
+    "type": "string",
+    "file": false,
+    "optional": true,
+    "choices": [],
+    "help": "Path (on the gateway host) to a PEM CA bundle trusted for the corporate proxy.  A CA certificate is not secret, so the gateway bind-mounts this file read-only into the sandbox (at [`PROXY_CA_MOUNT_PATH`](openshell_core::driver_utils::PROXY_CA_MOUNT_PATH)) and passes its path to the supervisor via `--upstream-proxy-ca-bundle`. The supervisor trusts it for the TLS handshake with an `https://` proxy and, because a TLS-intercepting proxy re-signs tunneled server certificates with the same CA, folds it into the sandbox trust bundle and upstream verification. Only meaningful with `https_proxy` set; the bundle must exist and contain at least one certificate.",
+    "structure": {
+      "type": "string",
+      "optional": true
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-driver-podman/src/config.rs",
+    "manual": "how-it-works/sandboxes/runtimes"
+  },
+  {
+    "path": "openshell.drivers.podman.proxy_connect_by_hostname",
+    "type": "bool",
+    "file": false,
+    "optional": true,
+    "choices": [],
+    "help": "Send the destination *hostname* in CONNECT requests to the corporate proxy instead of a validated IP.  By default the supervisor CONNECTs to an address that already passed SSRF and `allowed_ips` validation, so the proxy performs no DNS resolution and the tunnel stays bound to the validated answer. Set this to `true` only when the proxy's ACLs filter on hostnames and reject IP CONNECT targets: the proxy then resolves the name itself, so a name that resolves differently at the proxy (split-horizon DNS, rebinding) can reach destinations the sandbox policy never approved, and the proxy's own ACLs become the effective egress control. Prefer pointing the gateway host at the corporate resolver so validated-IP CONNECT works in split-horizon networks.",
+    "structure": {
+      "type": "boolean",
+      "optional": true
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-driver-podman/src/config.rs",
+    "manual": "how-it-works/sandboxes/runtimes"
+  },
+  {
+    "path": "openshell.drivers.podman.resource_admission.enabled",
+    "type": "bool",
+    "file": false,
+    "optional": false,
+    "choices": [],
+    "help": "",
+    "structure": {
+      "type": "boolean"
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-core/src/resource_admission.rs",
+    "manual": "how-it-works/sandboxes/runtimes"
+  },
+  {
+    "path": "openshell.drivers.podman.resource_admission.required_labels",
+    "type": "json",
+    "file": false,
+    "optional": false,
+    "choices": [],
+    "help": "",
+    "structure": {
+      "type": "object",
+      "additional": {
+        "type": "string"
+      }
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-core/src/resource_admission.rs",
+    "manual": "how-it-works/sandboxes/runtimes"
+  },
+  {
+    "path": "openshell.drivers.podman.sandbox_pids_limit",
+    "type": "number",
+    "file": false,
+    "optional": true,
+    "choices": [],
+    "help": "Container cgroup PID limit for Podman-managed sandboxes.  Omit the field to use `OpenShell`'s 2048-process sandbox limit. Explicit zero is invalid.",
+    "structure": {
+      "type": "integer",
+      "minimum": 1,
+      "optional": true
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-driver-podman/src/config.rs",
+    "example": 2048,
+    "manual": "how-it-works/sandboxes/runtimes"
+  },
+  {
+    "path": "openshell.drivers.podman.sandbox_runtime_image",
+    "type": "string",
+    "file": false,
+    "optional": false,
+    "choices": [],
+    "help": "OCI image containing the statically linked `openshell-sandbox` binary. The driver extracts the binary from this image into a verified host cache and mounts it read-only into each sandbox container.",
+    "structure": {
+      "type": "string"
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-driver-podman/src/config.rs",
+    "manual": "how-it-works/sandboxes/runtimes"
+  },
+  {
+    "path": "openshell.drivers.podman.socket_path",
+    "type": "string",
+    "file": true,
+    "optional": true,
+    "choices": [],
+    "help": "Podman API Unix socket. When unset, use the socket selected by gateway auto-detection.",
+    "structure": {
+      "type": "string",
+      "optional": true
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-driver-podman/src/config.rs",
+    "example": "/run/user/1000/podman/podman.sock",
+    "manual": "how-it-works/sandboxes/runtimes"
+  },
+  {
+    "path": "openshell.drivers.podman.ssh_socket_path",
+    "type": "string",
+    "file": false,
+    "optional": false,
+    "choices": [],
+    "help": "Unix socket path the in-container supervisor bridges relay traffic to.",
+    "structure": {
+      "type": "string"
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-driver-podman/src/config.rs",
+    "example": "/run/openshell/ssh.sock",
+    "manual": "how-it-works/sandboxes/runtimes"
+  },
+  {
+    "path": "openshell.drivers.podman.stop_timeout_secs",
+    "type": "number",
+    "file": false,
+    "optional": false,
+    "choices": [],
+    "help": "Container stop timeout in seconds (SIGTERM → SIGKILL).",
+    "structure": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-driver-podman/src/config.rs",
+    "example": 45,
+    "manual": "how-it-works/sandboxes/runtimes"
+  },
+  {
+    "path": "openshell.drivers.podman.supervisor_image",
+    "type": "string",
+    "file": false,
+    "optional": false,
+    "choices": [],
+    "help": "OCI image containing the dynamically linked `openshell-supervisor` binary.",
+    "structure": {
+      "type": "string"
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-driver-podman/src/config.rs",
+    "manual": "how-it-works/sandboxes/runtimes"
+  },
+  {
+    "path": "openshell.drivers.podman.uidmap",
+    "type": "json",
+    "file": false,
+    "optional": false,
+    "choices": [],
+    "help": "Explicit UID mappings for `userns = \"private\"`. Each entry is `\"container_id:host_id:size\"`.",
+    "structure": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-driver-podman/src/config.rs",
+    "manual": "how-it-works/sandboxes/runtimes"
+  },
+  {
+    "path": "openshell.drivers.podman.userns",
+    "type": "string",
+    "file": false,
+    "optional": true,
+    "choices": [],
+    "help": "User namespace mode for sandbox containers (e.g. `auto`, `private`). When unset, containers use the default user namespace.",
+    "structure": {
+      "type": "string",
+      "optional": true
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-driver-podman/src/config.rs",
+    "manual": "how-it-works/sandboxes/runtimes"
+  },
+  {
+    "path": "openshell.drivers.vm.allow_driver_config",
+    "type": "bool",
+    "file": false,
+    "optional": false,
+    "choices": [],
+    "help": "Permit caller-supplied driver JSON. Does not waive resource admission.",
+    "structure": {
+      "type": "boolean"
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-driver-vm/src/driver.rs",
+    "example": true,
+    "manual": "how-it-works/sandboxes/runtimes"
+  },
+  {
+    "path": "openshell.drivers.vm.bootstrap_image",
+    "type": "string",
+    "file": false,
+    "optional": false,
+    "choices": [],
+    "help": "",
+    "structure": {
+      "type": "string"
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-driver-vm/src/driver.rs",
+    "example": "nvcr.io/nvidia/base/ubuntu:24.04",
+    "manual": "how-it-works/sandboxes/runtimes"
+  },
+  {
+    "path": "openshell.drivers.vm.default_image",
+    "type": "string",
+    "file": false,
+    "optional": false,
+    "choices": [],
+    "help": "",
+    "structure": {
+      "type": "string"
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-driver-vm/src/driver.rs",
+    "example": "nvcr.io/nvidia/base/ubuntu:24.04",
+    "manual": "how-it-works/sandboxes/runtimes"
+  },
+  {
+    "path": "openshell.drivers.vm.enable_bind_mounts",
+    "type": "bool",
+    "file": false,
+    "optional": false,
+    "choices": [],
+    "help": "",
+    "structure": {
+      "type": "boolean"
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-driver-vm/src/driver.rs",
+    "example": true,
+    "manual": "how-it-works/sandboxes/runtimes"
+  },
+  {
+    "path": "openshell.drivers.vm.gpu_enabled",
+    "type": "bool",
+    "file": false,
+    "optional": false,
+    "choices": [],
+    "help": "",
+    "structure": {
+      "type": "boolean"
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-driver-vm/src/driver.rs",
+    "manual": "how-it-works/sandboxes/runtimes"
+  },
+  {
+    "path": "openshell.drivers.vm.gpu_mem_mib",
+    "type": "number",
+    "file": false,
+    "optional": false,
+    "choices": [],
+    "help": "",
+    "structure": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-driver-vm/src/driver.rs",
+    "manual": "how-it-works/sandboxes/runtimes"
+  },
+  {
+    "path": "openshell.drivers.vm.gpu_vcpus",
+    "type": "number",
+    "file": false,
+    "optional": false,
+    "choices": [],
+    "help": "",
+    "structure": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-driver-vm/src/driver.rs",
+    "manual": "how-it-works/sandboxes/runtimes"
+  },
+  {
+    "path": "openshell.drivers.vm.grpc_endpoint",
+    "type": "string",
+    "file": false,
+    "optional": false,
+    "choices": [],
+    "help": "",
+    "structure": {
+      "type": "string"
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-driver-vm/src/driver.rs",
+    "example": "https://host.openshell.internal:17670",
+    "manual": "how-it-works/sandboxes/runtimes"
+  },
+  {
+    "path": "openshell.drivers.vm.guest_tls_ca",
+    "type": "string",
+    "file": true,
+    "optional": true,
+    "choices": [],
+    "help": "",
+    "structure": {
+      "type": "string",
+      "optional": true
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-driver-vm/src/driver.rs",
+    "manual": "how-it-works/sandboxes/runtimes"
+  },
+  {
+    "path": "openshell.drivers.vm.https_proxy",
+    "type": "string",
+    "file": false,
+    "optional": true,
+    "choices": [],
+    "help": "",
+    "structure": {
+      "type": "string",
+      "optional": true
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-core/src/config.rs",
+    "manual": "how-it-works/sandboxes/runtimes"
+  },
+  {
+    "path": "openshell.drivers.vm.isolation_backend",
+    "type": "string",
+    "optional": true,
+    "choices": [],
+    "help": "Select an operator-registered isolation backend. Omit for the built-in sandbox backend.",
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-server/src/config_file.rs",
+    "manual": "extensibility/isolation-backends"
+  },
+  {
+    "path": "openshell.drivers.vm.krun_log_level",
+    "type": "number",
+    "file": false,
+    "optional": false,
+    "choices": [],
+    "help": "",
+    "structure": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-driver-vm/src/driver.rs",
+    "example": 1,
+    "manual": "how-it-works/sandboxes/runtimes"
+  },
+  {
+    "path": "openshell.drivers.vm.launcher_bin",
+    "type": "string",
+    "file": true,
+    "optional": true,
+    "choices": [],
+    "help": "",
+    "structure": {
+      "type": "string",
+      "optional": true
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-driver-vm/src/driver.rs",
+    "manual": "how-it-works/sandboxes/runtimes"
+  },
+  {
+    "path": "openshell.drivers.vm.log_level",
+    "type": "string",
+    "file": false,
+    "optional": false,
+    "choices": [],
+    "help": "",
+    "structure": {
+      "type": "string"
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-driver-vm/src/driver.rs",
+    "manual": "how-it-works/sandboxes/runtimes"
+  },
+  {
+    "path": "openshell.drivers.vm.mem_mib",
+    "type": "number",
+    "file": false,
+    "optional": false,
+    "choices": [],
+    "help": "",
+    "structure": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-driver-vm/src/driver.rs",
+    "example": 2048,
+    "manual": "how-it-works/sandboxes/runtimes"
+  },
+  {
+    "path": "openshell.drivers.vm.no_proxy",
+    "type": "string",
+    "file": false,
+    "optional": true,
+    "choices": [],
+    "help": "",
+    "structure": {
+      "type": "string",
+      "optional": true
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-core/src/config.rs",
+    "manual": "how-it-works/sandboxes/runtimes"
+  },
+  {
+    "path": "openshell.drivers.vm.overlay_disk_mib",
+    "type": "number",
+    "file": false,
+    "optional": false,
+    "choices": [],
+    "help": "",
+    "structure": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-driver-vm/src/driver.rs",
+    "example": 4096,
+    "manual": "how-it-works/sandboxes/runtimes"
+  },
+  {
+    "path": "openshell.drivers.vm.provider_spiffe_allow_guest_tcp",
+    "type": "bool",
+    "file": false,
+    "optional": false,
+    "choices": [],
+    "help": "",
+    "structure": {
+      "type": "boolean"
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-driver-vm/src/driver.rs",
+    "manual": "how-it-works/sandboxes/runtimes"
+  },
+  {
+    "path": "openshell.drivers.vm.provider_spiffe_workload_api_tcp_endpoint",
+    "type": "string",
+    "file": false,
+    "optional": true,
+    "choices": [],
+    "help": "Guest-reachable SPIFFE Workload API TCP endpoint. A VM cannot safely project a host UNIX socket; this must be a deliberately exposed TCP listener and requires `provider_spiffe_allow_guest_tcp`.",
+    "structure": {
+      "type": "string",
+      "optional": true
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-driver-vm/src/driver.rs",
+    "manual": "how-it-works/sandboxes/runtimes"
+  },
+  {
+    "path": "openshell.drivers.vm.proxy_auth_allow_insecure",
+    "type": "bool",
+    "file": false,
+    "optional": true,
+    "choices": [],
+    "help": "",
+    "structure": {
+      "type": "boolean",
+      "optional": true
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-core/src/config.rs",
+    "manual": "how-it-works/sandboxes/runtimes"
+  },
+  {
+    "path": "openshell.drivers.vm.proxy_auth_file",
+    "type": "string",
+    "file": true,
+    "optional": true,
+    "choices": [],
+    "help": "",
+    "structure": {
+      "type": "string",
+      "optional": true
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-core/src/config.rs",
+    "manual": "how-it-works/sandboxes/runtimes"
+  },
+  {
+    "path": "openshell.drivers.vm.proxy_ca_bundle",
+    "type": "string",
+    "file": true,
+    "optional": true,
+    "choices": [],
+    "help": "Gateway-host PEM CA bundle staged into the guest overlay for the corporate proxy and TLS-intercepted server certificates.",
+    "structure": {
+      "type": "string",
+      "optional": true
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-driver-vm/src/driver.rs",
+    "manual": "how-it-works/sandboxes/runtimes"
+  },
+  {
+    "path": "openshell.drivers.vm.proxy_connect_by_hostname",
+    "type": "bool",
+    "file": false,
+    "optional": true,
+    "choices": [],
+    "help": "",
+    "structure": {
+      "type": "boolean",
+      "optional": true
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-core/src/config.rs",
+    "manual": "how-it-works/sandboxes/runtimes"
+  },
+  {
+    "path": "openshell.drivers.vm.resource_admission.enabled",
+    "type": "bool",
+    "file": false,
+    "optional": false,
+    "choices": [],
+    "help": "",
+    "structure": {
+      "type": "boolean"
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-core/src/resource_admission.rs",
+    "example": false,
+    "manual": "how-it-works/sandboxes/runtimes"
+  },
+  {
+    "path": "openshell.drivers.vm.resource_admission.required_labels",
+    "type": "json",
+    "file": false,
+    "optional": false,
+    "choices": [],
+    "help": "",
+    "structure": {
+      "type": "object",
+      "additional": {
+        "type": "string"
+      }
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-core/src/resource_admission.rs",
+    "manual": "how-it-works/sandboxes/runtimes"
+  },
+  {
+    "path": "openshell.drivers.vm.rootfs_tar_max_bytes",
+    "type": "number",
+    "file": false,
+    "optional": true,
+    "choices": [],
+    "help": "Maximum rootfs tar file size in bytes. Defaults to 10 GiB.",
+    "structure": {
+      "type": "integer",
+      "minimum": 0,
+      "optional": true
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-driver-vm/src/driver.rs",
+    "manual": "how-it-works/sandboxes/runtimes"
+  },
+  {
+    "path": "openshell.drivers.vm.rootfs_tar_staging_dir",
+    "type": "string",
+    "file": true,
+    "optional": true,
+    "choices": [],
+    "help": "Directory where rootfs tar files must be staged before they can be referenced in a `CreateSandbox` request. Defaults to `<state_dir>/rootfs-tar-staging`.",
+    "structure": {
+      "type": "string",
+      "optional": true
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-driver-vm/src/driver.rs",
+    "manual": "how-it-works/sandboxes/runtimes"
+  },
+  {
+    "path": "openshell.drivers.vm.sandbox_gid",
+    "type": "number",
+    "file": false,
+    "optional": true,
+    "choices": [],
+    "help": "Optional GID override for rootfs `/etc/passwd` and `/etc/group` entries. When one override is supplied, its missing counterpart defaults to the UID.",
+    "structure": {
+      "type": "integer",
+      "minimum": 0,
+      "optional": true
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-driver-vm/src/driver.rs",
+    "manual": "how-it-works/sandboxes/runtimes"
+  },
+  {
+    "path": "openshell.drivers.vm.sandbox_uid",
+    "type": "number",
+    "file": false,
+    "optional": true,
+    "choices": [],
+    "help": "Optional UID override for the sandbox account in newly prepared rootfs images. When both identity fields are empty, an image-provided sandbox account is preserved.",
+    "structure": {
+      "type": "integer",
+      "minimum": 0,
+      "optional": true
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-driver-vm/src/driver.rs",
+    "manual": "how-it-works/sandboxes/runtimes"
+  },
+  {
+    "path": "openshell.drivers.vm.state_dir",
+    "type": "string",
+    "file": true,
+    "optional": false,
+    "choices": [],
+    "help": "",
+    "structure": {
+      "type": "string"
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-driver-vm/src/driver.rs",
+    "example": "/var/lib/openshell/vm",
+    "manual": "how-it-works/sandboxes/runtimes"
+  },
+  {
+    "path": "openshell.drivers.vm.supervisor_gateway_name",
+    "type": "string",
+    "file": false,
+    "optional": true,
+    "choices": [],
+    "help": "Gateway name passed to supervisors for their telemetry.",
+    "structure": {
+      "type": "string",
+      "optional": true
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-driver-vm/src/driver.rs",
+    "manual": "how-it-works/sandboxes/runtimes"
+  },
+  {
+    "path": "openshell.drivers.vm.vcpus",
+    "type": "number",
+    "file": false,
+    "optional": false,
+    "choices": [],
+    "help": "",
+    "structure": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-driver-vm/src/driver.rs",
+    "example": 2,
+    "manual": "how-it-works/sandboxes/runtimes"
+  },
+  {
+    "path": "openshell.supervisor.isolation_backends",
+    "type": "json",
+    "file": false,
+    "optional": false,
+    "choices": [],
+    "help": "Operator-owned external isolation routes, reachable by supervisors.",
+    "structure": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "help": "",
+            "required": true
+          },
+          "endpoint": {
+            "type": "object",
+            "discriminator": "kind",
+            "properties": {
+              "kind": {
+                "type": "string",
+                "choices": [
+                  "unix",
+                  "tcp",
+                  "vsock"
+                ],
+                "required": true
+              }
+            },
+            "variants": {
+              "unix": {
+                "socket_path": {
+                  "type": "string",
+                  "required": true
+                }
+              },
+              "tcp": {
+                "authority": {
+                  "type": "string",
+                  "required": true
+                },
+                "addresses": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "required": true
+                }
+              },
+              "vsock": {
+                "guest_cid": {
+                  "type": "integer",
+                  "minimum": 3,
+                  "required": true
+                },
+                "port": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "required": true
+                }
+              }
+            },
+            "help": "",
+            "required": true
+          }
+        }
+      }
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-server/src/config_file.rs",
+    "manual": "extensibility/isolation-backends"
+  },
+  {
+    "path": "openshell.supervisor.middleware",
+    "type": "json",
+    "file": false,
+    "optional": false,
+    "choices": [],
+    "help": "Statically registered supervisor middleware services. Registration is operator-owned and changes require a gateway restart.",
+    "structure": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "help": "Operator-facing name used for diagnostics.",
+            "required": true
+          },
+          "grpc_endpoint": {
+            "type": "string",
+            "help": "HTTP or HTTPS gRPC endpoint reachable by the gateway and supervisors.",
+            "required": true
+          },
+          "tls_ca_cert_path": {
+            "type": "string",
+            "optional": true,
+            "help": "Optional PEM trust-root bundle for an HTTPS endpoint.",
+            "required": false
+          },
+          "audience": {
+            "type": "string",
+            "optional": true,
+            "help": "Exact JWT audience for this service. Defaults to a kind-scoped value derived from the registration name.",
+            "required": false
+          },
+          "allow_insecure_transport": {
+            "type": "boolean",
+            "help": "Opt out of extension authentication for this registration, permitting a plaintext `http://` endpoint with no bearer credential. Development and trusted-network deployments only.",
+            "required": false
+          },
+          "max_payload_bytes": {
+            "type": "integer",
+            "minimum": 0,
+            "help": "Operator-owned logical payload limit for every binding exposed by this service, including HTTP bodies and complete WebSocket messages.",
+            "required": true
+          },
+          "timeout": {
+            "type": "string",
+            "optional": true,
+            "help": "Default RPC timeout using an integer with an `ms` or `s` suffix.",
+            "required": false
+          },
+          "binding_policy": {
+            "type": "string",
+            "choices": [
+              "dynamic",
+              "allowlist",
+              "exact"
+            ],
+            "help": "Which advertised operation/phase pairs the operator authorizes.",
+            "required": false
+          },
+          "bindings": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "help": "Required operation/phase pairs for an allowlist or exact policy.",
+            "required": false
+          }
+        }
+      }
+    },
+    "source": "https://github.com/NVIDIA/OpenShell/blob/ac7f615cd12d5cc49cb16eb1f5f10ffeb1e90f47/crates/openshell-server/src/config_file.rs",
+    "example": [
+      {
+        "name": "content-guard",
+        "grpc_endpoint": "https://content-guard.example:50051",
+        "tls_ca_cert_path": "/path/to/content-guard-ca.pem",
+        "max_payload_bytes": 262144,
+        "timeout": "500ms"
+      }
+    ],
+    "manual": "extensibility/supervisor-middleware/configure"
+  }
+]

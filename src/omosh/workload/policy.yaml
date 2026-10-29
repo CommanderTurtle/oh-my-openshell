@@ -1,0 +1,18 @@
+# SPDX-FileCopyrightText: 2026 CommanderTurtle
+# SPDX-License-Identifier: AGPL-3.0-only
+# Session workload policy. Providers can add their own outbound rules.
+version: 1
+filesystem_policy:
+  include_workdir: true
+  read_only: [/bin, /usr, /lib, /lib64, /proc, /dev/urandom, /etc, /var/log]
+  read_write:
+    - /home/sandbox
+    - /tmp
+    - /dev/null
+    # tmux allocates PTYs inside this sandbox; other /dev paths stay restricted.
+    - /dev/pts
+    - /dev/ptmx
+    - /dev/tty
+landlock:
+  compatibility: hard_requirement
+network_policies: {}
